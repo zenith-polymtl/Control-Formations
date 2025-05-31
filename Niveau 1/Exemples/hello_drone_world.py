@@ -1,4 +1,4 @@
-from Zenmav.helper_func import *
+from Zenmav.core import *
 
 mav = pymav(ip = 'tcp:127.0.0.1:5763')
 
@@ -14,7 +14,7 @@ mav.local_target([50, -30,  -5])
 mav.local_target([100, 10, - 5])
 
 
-
+input("Press Enter to scan...")
 mav.rectilinear_scan(rayon_scan=40)
 input("Press Enter to return to home...")
 mav.RTL()
