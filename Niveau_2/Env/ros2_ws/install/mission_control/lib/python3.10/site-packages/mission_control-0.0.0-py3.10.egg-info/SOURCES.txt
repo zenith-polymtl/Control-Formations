@@ -1,0 +1,15 @@
+package.xml
+setup.cfg
+setup.py
+../../build/mission_control/mission_control.egg-info/PKG-INFO
+../../build/mission_control/mission_control.egg-info/SOURCES.txt
+../../build/mission_control/mission_control.egg-info/dependency_links.txt
+../../build/mission_control/mission_control.egg-info/requires.txt
+../../build/mission_control/mission_control.egg-info/top_level.txt
+../../build/mission_control/mission_control.egg-info/zip-safe
+mission_control/__init__.py
+mission_control/monitor.py
+resource/mission_control
+test/test_copyright.py
+test/test_flake8.py
+test/test_pep257.py

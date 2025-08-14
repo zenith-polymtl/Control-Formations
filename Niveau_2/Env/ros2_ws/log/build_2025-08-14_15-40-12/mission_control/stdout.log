@@ -1,0 +1,33 @@
+running egg_info
+creating ../../build/mission_control/mission_control.egg-info
+writing ../../build/mission_control/mission_control.egg-info/PKG-INFO
+writing dependency_links to ../../build/mission_control/mission_control.egg-info/dependency_links.txt
+writing requirements to ../../build/mission_control/mission_control.egg-info/requires.txt
+writing top-level names to ../../build/mission_control/mission_control.egg-info/top_level.txt
+writing manifest file '../../build/mission_control/mission_control.egg-info/SOURCES.txt'
+reading manifest file '../../build/mission_control/mission_control.egg-info/SOURCES.txt'
+writing manifest file '../../build/mission_control/mission_control.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /ros2_ws/build/mission_control/build
+creating /ros2_ws/build/mission_control/build/lib
+creating /ros2_ws/build/mission_control/build/lib/mission_control
+copying mission_control/monitor.py -> /ros2_ws/build/mission_control/build/lib/mission_control
+copying mission_control/__init__.py -> /ros2_ws/build/mission_control/build/lib/mission_control
+running install
+running install_lib
+creating /ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control
+copying /ros2_ws/build/mission_control/build/lib/mission_control/monitor.py -> /ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control
+copying /ros2_ws/build/mission_control/build/lib/mission_control/__init__.py -> /ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control
+byte-compiling /ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control/monitor.py to monitor.cpython-310.pyc
+byte-compiling /ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control/__init__.py to __init__.cpython-310.pyc
+running install_data
+creating /ros2_ws/install/mission_control/share/ament_index
+creating /ros2_ws/install/mission_control/share/ament_index/resource_index
+creating /ros2_ws/install/mission_control/share/ament_index/resource_index/packages
+copying resource/mission_control -> /ros2_ws/install/mission_control/share/ament_index/resource_index/packages
+copying package.xml -> /ros2_ws/install/mission_control/share/mission_control
+running install_egg_info
+Copying ../../build/mission_control/mission_control.egg-info to /ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control-0.0.0-py3.10.egg-info
+running install_scripts
+writing list of installed files to '/ros2_ws/build/mission_control/install.log'

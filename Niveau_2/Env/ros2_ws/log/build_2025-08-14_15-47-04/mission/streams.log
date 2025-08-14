@@ -1,0 +1,19 @@
+[2.272s] Invoking command in '/ros2_ws/src/mission': PYTHONPATH=/ros2_ws/build/mission/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/mission/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/mission build --build-base /ros2_ws/build/mission/build install --record /ros2_ws/build/mission/install.log --single-version-externally-managed install_data
+[2.882s] running egg_info
+[2.916s] writing ../../build/mission/mission.egg-info/PKG-INFO
+[2.918s] writing dependency_links to ../../build/mission/mission.egg-info/dependency_links.txt
+[2.919s] writing requirements to ../../build/mission/mission.egg-info/requires.txt
+[2.919s] writing top-level names to ../../build/mission/mission.egg-info/top_level.txt
+[2.960s] reading manifest file '../../build/mission/mission.egg-info/SOURCES.txt'
+[2.961s] writing manifest file '../../build/mission/mission.egg-info/SOURCES.txt'
+[2.962s] running build
+[2.962s] running build_py
+[2.963s] running install
+[2.974s] running install_lib
+[2.998s] running install_data
+[2.998s] running install_egg_info
+[3.021s] removing '/ros2_ws/install/mission/lib/python3.10/site-packages/mission-0.0.0-py3.10.egg-info' (and everything under it)
+[3.021s] Copying ../../build/mission/mission.egg-info to /ros2_ws/install/mission/lib/python3.10/site-packages/mission-0.0.0-py3.10.egg-info
+[3.023s] running install_scripts
+[3.140s] writing list of installed files to '/ros2_ws/build/mission/install.log'
+[3.255s] Invoked command in '/ros2_ws/src/mission' returned '0': PYTHONPATH=/ros2_ws/build/mission/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/mission/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/mission build --build-base /ros2_ws/build/mission/build install --record /ros2_ws/build/mission/install.log --single-version-externally-managed install_data
