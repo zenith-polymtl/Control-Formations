@@ -1,0 +1,33 @@
+# docker-compose.yml
+services:
+  zenith:
+    build: .
+    # Host network & USB access for the LiDAR
+    network_mode: host
+    privileged: true
+    ipc: host
+    tty: true
+    stdin_open: true
+    # ⬇️  Bind-mount your workspaces so you can edit freely
+    # If simulation on Mission Planner or real flight test : change address to tcp:// ou udp:// (near line 24)
+    volumes:
+      - ./ros2_ws:/ros2_ws:rw
+      - /tmp/.X11-unix:/tmp/.X11-unix 
+      - ~/.Xauthority:/root/.Xauthority:ro
+    command: >
+      bash -c "
+        source /opt/ros/humble/setup.bash &&
+        cd /ros2_ws &&
+        colcon build&&
+        ros2 daemon start &&
+        source install/setup.bash &&
+        ros2 launch mavros apm.launch fcu_url:=tcp://127.0.0.1:5763 &
+        tail -f /dev/null
+      "
+    environment:
+      - ROS_DOMAIN_ID=1
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - DISPLAY
+      - XAUTHORITY=/root/.Xauthority
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
