@@ -1,0 +1,98 @@
+[0.000000] (-) TimerEvent: {}
+[0.000272] (bringup) JobQueued: {'identifier': 'bringup', 'dependencies': OrderedDict()}
+[0.000720] (mission) JobQueued: {'identifier': 'mission', 'dependencies': OrderedDict()}
+[0.000795] (mission_control) JobQueued: {'identifier': 'mission_control', 'dependencies': OrderedDict()}
+[0.000858] (bringup) JobStarted: {'identifier': 'bringup'}
+[0.018004] (mission) JobStarted: {'identifier': 'mission'}
+[0.025004] (mission_control) JobStarted: {'identifier': 'mission_control'}
+[0.099751] (-) TimerEvent: {}
+[0.200102] (-) TimerEvent: {}
+[0.300608] (-) TimerEvent: {}
+[0.400957] (-) TimerEvent: {}
+[0.501298] (-) TimerEvent: {}
+[0.601655] (-) TimerEvent: {}
+[0.702030] (-) TimerEvent: {}
+[0.802384] (-) TimerEvent: {}
+[0.902873] (-) TimerEvent: {}
+[1.003465] (-) TimerEvent: {}
+[1.103807] (-) TimerEvent: {}
+[1.204225] (-) TimerEvent: {}
+[1.304574] (-) TimerEvent: {}
+[1.405015] (-) TimerEvent: {}
+[1.476157] (mission) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../build/mission', 'build', '--build-base', '/ros2_ws/build/mission/build', 'install', '--record', '/ros2_ws/build/mission/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/ros2_ws/src/mission', 'env': {'HOSTNAME': 'Pc', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/root', 'OLDPWD': '/ros2_ws', 'ROS_PYTHON_VERSION': '3', 'ROS_DISTRO': 'humble', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'TERM': 'xterm', 'ROS_LOCALHOST_ONLY': '0', 'QT_X11_NO_MITSHM': '1', 'PATH': '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'DISPLAY': ':0', 'LANG': 'C.UTF-8', 'RMW_IMPLEMENTATION': 'rmw_fastrtps_cpp', 'XAUTHORITY': '/root/.Xauthority', 'ROS_DOMAIN_ID': '1', 'AMENT_PREFIX_PATH': '/opt/ros/humble', 'DEBIAN_FRONTEND': 'noninteractive', 'PWD': '/ros2_ws/build/mission', 'LC_ALL': 'C.UTF-8', 'PYTHONPATH': '/ros2_ws/build/mission/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/mission/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1'}, 'shell': False}
+[1.484292] (bringup) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../build/bringup', 'build', '--build-base', '/ros2_ws/build/bringup/build', 'install', '--record', '/ros2_ws/build/bringup/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/ros2_ws/src/bringup', 'env': {'HOSTNAME': 'Pc', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/root', 'OLDPWD': '/ros2_ws', 'ROS_PYTHON_VERSION': '3', 'ROS_DISTRO': 'humble', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'TERM': 'xterm', 'ROS_LOCALHOST_ONLY': '0', 'QT_X11_NO_MITSHM': '1', 'PATH': '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'DISPLAY': ':0', 'LANG': 'C.UTF-8', 'RMW_IMPLEMENTATION': 'rmw_fastrtps_cpp', 'XAUTHORITY': '/root/.Xauthority', 'ROS_DOMAIN_ID': '1', 'AMENT_PREFIX_PATH': '/opt/ros/humble', 'DEBIAN_FRONTEND': 'noninteractive', 'PWD': '/ros2_ws/build/bringup', 'LC_ALL': 'C.UTF-8', 'PYTHONPATH': '/ros2_ws/build/bringup/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/bringup/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1'}, 'shell': False}
+[1.489454] (mission_control) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../build/mission_control', 'build', '--build-base', '/ros2_ws/build/mission_control/build', 'install', '--record', '/ros2_ws/build/mission_control/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/ros2_ws/src/mission_control', 'env': {'HOSTNAME': 'Pc', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/root', 'OLDPWD': '/ros2_ws', 'ROS_PYTHON_VERSION': '3', 'ROS_DISTRO': 'humble', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'TERM': 'xterm', 'ROS_LOCALHOST_ONLY': '0', 'QT_X11_NO_MITSHM': '1', 'PATH': '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'DISPLAY': ':0', 'LANG': 'C.UTF-8', 'RMW_IMPLEMENTATION': 'rmw_fastrtps_cpp', 'XAUTHORITY': '/root/.Xauthority', 'ROS_DOMAIN_ID': '1', 'AMENT_PREFIX_PATH': '/opt/ros/humble', 'DEBIAN_FRONTEND': 'noninteractive', 'PWD': '/ros2_ws/build/mission_control', 'LC_ALL': 'C.UTF-8', 'PYTHONPATH': '/ros2_ws/build/mission_control/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/mission_control/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1'}, 'shell': False}
+[1.505160] (-) TimerEvent: {}
+[1.605514] (-) TimerEvent: {}
+[1.705836] (-) TimerEvent: {}
+[1.783631] (mission) StdoutLine: {'line': b'running egg_info\n'}
+[1.793062] (mission_control) StdoutLine: {'line': b'running egg_info\n'}
+[1.794501] (mission) StdoutLine: {'line': b'writing ../../build/mission/mission.egg-info/PKG-INFO\n'}
+[1.794855] (mission) StdoutLine: {'line': b'writing dependency_links to ../../build/mission/mission.egg-info/dependency_links.txt\n'}
+[1.795208] (mission) StdoutLine: {'line': b'writing entry points to ../../build/mission/mission.egg-info/entry_points.txt\n'}
+[1.795419] (mission) StdoutLine: {'line': b'writing requirements to ../../build/mission/mission.egg-info/requires.txt\n'}
+[1.795586] (mission) StdoutLine: {'line': b'writing top-level names to ../../build/mission/mission.egg-info/top_level.txt\n'}
+[1.796203] (bringup) StdoutLine: {'line': b'running egg_info\n'}
+[1.805950] (-) TimerEvent: {}
+[1.806528] (mission_control) StdoutLine: {'line': b'writing ../../build/mission_control/mission_control.egg-info/PKG-INFO\n'}
+[1.806879] (mission_control) StdoutLine: {'line': b'writing dependency_links to ../../build/mission_control/mission_control.egg-info/dependency_links.txt\n'}
+[1.807133] (mission_control) StdoutLine: {'line': b'writing entry points to ../../build/mission_control/mission_control.egg-info/entry_points.txt\n'}
+[1.807346] (mission_control) StdoutLine: {'line': b'writing requirements to ../../build/mission_control/mission_control.egg-info/requires.txt\n'}
+[1.807498] (mission_control) StdoutLine: {'line': b'writing top-level names to ../../build/mission_control/mission_control.egg-info/top_level.txt\n'}
+[1.809920] (bringup) StdoutLine: {'line': b'writing ../../build/bringup/bringup.egg-info/PKG-INFO\n'}
+[1.810249] (bringup) StdoutLine: {'line': b'writing dependency_links to ../../build/bringup/bringup.egg-info/dependency_links.txt\n'}
+[1.811184] (bringup) StdoutLine: {'line': b'writing requirements to ../../build/bringup/bringup.egg-info/requires.txt\n'}
+[1.811351] (bringup) StdoutLine: {'line': b'writing top-level names to ../../build/bringup/bringup.egg-info/top_level.txt\n'}
+[1.817595] (mission) StdoutLine: {'line': b"reading manifest file '../../build/mission/mission.egg-info/SOURCES.txt'\n"}
+[1.818406] (mission) StdoutLine: {'line': b"writing manifest file '../../build/mission/mission.egg-info/SOURCES.txt'\n"}
+[1.818625] (mission) StdoutLine: {'line': b'running build\n'}
+[1.818732] (mission) StdoutLine: {'line': b'running build_py\n'}
+[1.818920] (mission) StdoutLine: {'line': b'copying mission/colin_drone_node.py -> /ros2_ws/build/mission/build/lib/mission\n'}
+[1.819870] (mission) StdoutLine: {'line': b'running install\n'}
+[1.824368] (mission) StdoutLine: {'line': b'running install_lib\n'}
+[1.829415] (mission_control) StdoutLine: {'line': b"reading manifest file '../../build/mission_control/mission_control.egg-info/SOURCES.txt'\n"}
+[1.830895] (mission_control) StdoutLine: {'line': b"writing manifest file '../../build/mission_control/mission_control.egg-info/SOURCES.txt'\n"}
+[1.831162] (mission_control) StdoutLine: {'line': b'running build\n'}
+[1.831229] (mission_control) StdoutLine: {'line': b'running build_py\n'}
+[1.831376] (mission_control) StdoutLine: {'line': b'copying mission_control/ballon_pub.py -> /ros2_ws/build/mission_control/build/lib/mission_control\n'}
+[1.831888] (mission_control) StdoutLine: {'line': b'running install\n'}
+[1.836073] (bringup) StdoutLine: {'line': b"reading manifest file '../../build/bringup/bringup.egg-info/SOURCES.txt'\n"}
+[1.836403] (mission_control) StdoutLine: {'line': b'running install_lib\n'}
+[1.836982] (bringup) StdoutLine: {'line': b"writing manifest file '../../build/bringup/bringup.egg-info/SOURCES.txt'\n"}
+[1.837804] (bringup) StdoutLine: {'line': b'running build\n'}
+[1.838128] (bringup) StdoutLine: {'line': b'running build_py\n'}
+[1.838277] (mission) StdoutLine: {'line': b'copying /ros2_ws/build/mission/build/lib/mission/colin_drone_node.py -> /ros2_ws/install/mission/lib/python3.10/site-packages/mission\n'}
+[1.838719] (bringup) StdoutLine: {'line': b'running install\n'}
+[1.839208] (mission) StdoutLine: {'line': b'byte-compiling /ros2_ws/install/mission/lib/python3.10/site-packages/mission/colin_drone_node.py to colin_drone_node.cpython-310.pyc\n'}
+[1.840310] (mission) StdoutLine: {'line': b'running install_data\n'}
+[1.840509] (mission) StdoutLine: {'line': b'running install_egg_info\n'}
+[1.843084] (bringup) StdoutLine: {'line': b'running install_lib\n'}
+[1.848000] (mission_control) StdoutLine: {'line': b'copying /ros2_ws/build/mission_control/build/lib/mission_control/ballon_pub.py -> /ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control\n'}
+[1.848662] (mission_control) StdoutLine: {'line': b'byte-compiling /ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control/ballon_pub.py to ballon_pub.cpython-310.pyc\n'}
+[1.850845] (mission_control) StdoutLine: {'line': b'running install_data\n'}
+[1.851048] (mission_control) StdoutLine: {'line': b'running install_egg_info\n'}
+[1.852959] (mission) StdoutLine: {'line': b"removing '/ros2_ws/install/mission/lib/python3.10/site-packages/mission-0.0.0-py3.10.egg-info' (and everything under it)\n"}
+[1.854028] (mission) StdoutLine: {'line': b'Copying ../../build/mission/mission.egg-info to /ros2_ws/install/mission/lib/python3.10/site-packages/mission-0.0.0-py3.10.egg-info\n'}
+[1.854917] (bringup) StdoutLine: {'line': b'running install_data\n'}
+[1.855140] (bringup) StdoutLine: {'line': b'running install_egg_info\n'}
+[1.855761] (mission) StdoutLine: {'line': b'running install_scripts\n'}
+[1.863237] (mission_control) StdoutLine: {'line': b"removing '/ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control-0.0.0-py3.10.egg-info' (and everything under it)\n"}
+[1.863886] (mission_control) StdoutLine: {'line': b'Copying ../../build/mission_control/mission_control.egg-info to /ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control-0.0.0-py3.10.egg-info\n'}
+[1.865698] (mission_control) StdoutLine: {'line': b'running install_scripts\n'}
+[1.866931] (bringup) StdoutLine: {'line': b"removing '/ros2_ws/install/bringup/lib/python3.10/site-packages/bringup-0.0.0-py3.10.egg-info' (and everything under it)\n"}
+[1.867901] (bringup) StdoutLine: {'line': b'Copying ../../build/bringup/bringup.egg-info to /ros2_ws/install/bringup/lib/python3.10/site-packages/bringup-0.0.0-py3.10.egg-info\n'}
+[1.870779] (bringup) StdoutLine: {'line': b'running install_scripts\n'}
+[1.906147] (-) TimerEvent: {}
+[1.911744] (mission) StdoutLine: {'line': b'Installing colin_drone_node script to /ros2_ws/install/mission/lib/mission\n'}
+[1.912925] (mission) StdoutLine: {'line': b"writing list of installed files to '/ros2_ws/build/mission/install.log'\n"}
+[1.924301] (mission_control) StdoutLine: {'line': b'Installing balloon script to /ros2_ws/install/mission_control/lib/mission_control\n'}
+[1.925465] (mission_control) StdoutLine: {'line': b'Installing monitor script to /ros2_ws/install/mission_control/lib/mission_control\n'}
+[1.926049] (mission_control) StdoutLine: {'line': b"writing list of installed files to '/ros2_ws/build/mission_control/install.log'\n"}
+[1.937069] (bringup) StdoutLine: {'line': b"writing list of installed files to '/ros2_ws/build/bringup/install.log'\n"}
+[1.961133] (mission) CommandEnded: {'returncode': 0}
+[1.978914] (mission) JobEnded: {'identifier': 'mission', 'rc': 0}
+[1.980710] (mission_control) CommandEnded: {'returncode': 0}
+[1.987203] (mission_control) JobEnded: {'identifier': 'mission_control', 'rc': 0}
+[1.989209] (bringup) CommandEnded: {'returncode': 0}
+[1.995463] (bringup) JobEnded: {'identifier': 'bringup', 'rc': 0}
+[1.997281] (-) EventReactorShutdown: {}

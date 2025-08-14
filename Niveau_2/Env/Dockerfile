@@ -124,3 +124,12 @@ RUN /opt/ros/humble/lib/mavros/install_geographiclib_datasets.sh
 RUN pip install --no-cache-dir matplotlib
 RUN pip install --no-cache-dir pandas
 WORKDIR /ros2_ws
+
+COPY ros2_ws/src ./src
+
+# Build the workspace using bash explicitly
+RUN ["/bin/bash", "-c", "source /opt/ros/humble/setup.bash && colcon build"]
+
+# Add sourcing to .bashrc using bash
+RUN ["/bin/bash", "-c", "echo 'source /opt/ros/humble/setup.bash' >> /root/.bashrc"]
+RUN ["/bin/bash", "-c", "echo 'source /ros2_ws/install/setup.bash' >> /root/.bashrc"]

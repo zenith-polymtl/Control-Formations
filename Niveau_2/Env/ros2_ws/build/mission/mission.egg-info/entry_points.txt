@@ -1,0 +1,2 @@
+[console_scripts]
+colin_drone_node = mission.colin_drone_node:main

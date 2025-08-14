@@ -4,10 +4,12 @@ setup.py
 ../../build/mission/mission.egg-info/PKG-INFO
 ../../build/mission/mission.egg-info/SOURCES.txt
 ../../build/mission/mission.egg-info/dependency_links.txt
+../../build/mission/mission.egg-info/entry_points.txt
 ../../build/mission/mission.egg-info/requires.txt
 ../../build/mission/mission.egg-info/top_level.txt
 ../../build/mission/mission.egg-info/zip-safe
 mission/__init__.py
+mission/colin_drone_node.py
 resource/mission
 test/test_copyright.py
 test/test_flake8.py
