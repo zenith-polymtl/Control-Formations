@@ -1,0 +1,97 @@
+[0.000000] (-) TimerEvent: {}
+[0.000687] (bringup) JobQueued: {'identifier': 'bringup', 'dependencies': OrderedDict()}
+[0.000759] (mission) JobQueued: {'identifier': 'mission', 'dependencies': OrderedDict()}
+[0.000820] (mission_control) JobQueued: {'identifier': 'mission_control', 'dependencies': OrderedDict()}
+[0.000895] (bringup) JobStarted: {'identifier': 'bringup'}
+[0.010267] (mission) JobStarted: {'identifier': 'mission'}
+[0.015809] (mission_control) JobStarted: {'identifier': 'mission_control'}
+[0.099722] (-) TimerEvent: {}
+[0.200082] (-) TimerEvent: {}
+[0.300447] (-) TimerEvent: {}
+[0.400880] (-) TimerEvent: {}
+[0.501260] (-) TimerEvent: {}
+[0.601672] (-) TimerEvent: {}
+[0.702062] (-) TimerEvent: {}
+[0.802434] (-) TimerEvent: {}
+[0.902828] (-) TimerEvent: {}
+[1.003207] (-) TimerEvent: {}
+[1.103589] (-) TimerEvent: {}
+[1.204025] (-) TimerEvent: {}
+[1.304480] (-) TimerEvent: {}
+[1.404954] (-) TimerEvent: {}
+[1.505416] (-) TimerEvent: {}
+[1.538024] (bringup) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../build/bringup', 'build', '--build-base', '/ros2_ws/build/bringup/build', 'install', '--record', '/ros2_ws/build/bringup/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/ros2_ws/src/bringup', 'env': {'HOSTNAME': 'Pc', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/root', 'ROS_PYTHON_VERSION': '3', 'COLCON_PREFIX_PATH': '/ros2_ws/install', 'ROS_DISTRO': 'humble', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'TERM': 'xterm', 'ROS_LOCALHOST_ONLY': '0', 'QT_X11_NO_MITSHM': '1', 'PATH': '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'DISPLAY': ':0', 'LANG': 'C.UTF-8', 'RMW_IMPLEMENTATION': 'rmw_fastrtps_cpp', 'XAUTHORITY': '/root/.Xauthority', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'ROS_DOMAIN_ID': '1', 'AMENT_PREFIX_PATH': '/ros2_ws/install/mission_control:/ros2_ws/install/mission:/ros2_ws/install/bringup:/opt/ros/humble', 'DEBIAN_FRONTEND': 'noninteractive', 'PWD': '/ros2_ws/build/bringup', 'LC_ALL': 'C.UTF-8', 'PYTHONPATH': '/ros2_ws/build/bringup/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/bringup/lib/python3.10/site-packages:/ros2_ws/install/mission_control/lib/python3.10/site-packages:/ros2_ws/install/mission/lib/python3.10/site-packages:/ros2_ws/install/bringup/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1'}, 'shell': False}
+[1.561494] (mission_control) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../build/mission_control', 'build', '--build-base', '/ros2_ws/build/mission_control/build', 'install', '--record', '/ros2_ws/build/mission_control/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/ros2_ws/src/mission_control', 'env': {'HOSTNAME': 'Pc', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/root', 'ROS_PYTHON_VERSION': '3', 'COLCON_PREFIX_PATH': '/ros2_ws/install', 'ROS_DISTRO': 'humble', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'TERM': 'xterm', 'ROS_LOCALHOST_ONLY': '0', 'QT_X11_NO_MITSHM': '1', 'PATH': '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'DISPLAY': ':0', 'LANG': 'C.UTF-8', 'RMW_IMPLEMENTATION': 'rmw_fastrtps_cpp', 'XAUTHORITY': '/root/.Xauthority', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'ROS_DOMAIN_ID': '1', 'AMENT_PREFIX_PATH': '/ros2_ws/install/mission_control:/ros2_ws/install/mission:/ros2_ws/install/bringup:/opt/ros/humble', 'DEBIAN_FRONTEND': 'noninteractive', 'PWD': '/ros2_ws/build/mission_control', 'LC_ALL': 'C.UTF-8', 'PYTHONPATH': '/ros2_ws/build/mission_control/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/mission_control/lib/python3.10/site-packages:/ros2_ws/install/mission_control/lib/python3.10/site-packages:/ros2_ws/install/mission/lib/python3.10/site-packages:/ros2_ws/install/bringup/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1'}, 'shell': False}
+[1.580655] (mission) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../build/mission', 'build', '--build-base', '/ros2_ws/build/mission/build', 'install', '--record', '/ros2_ws/build/mission/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/ros2_ws/src/mission', 'env': {'HOSTNAME': 'Pc', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/root', 'ROS_PYTHON_VERSION': '3', 'COLCON_PREFIX_PATH': '/ros2_ws/install', 'ROS_DISTRO': 'humble', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'TERM': 'xterm', 'ROS_LOCALHOST_ONLY': '0', 'QT_X11_NO_MITSHM': '1', 'PATH': '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'DISPLAY': ':0', 'LANG': 'C.UTF-8', 'RMW_IMPLEMENTATION': 'rmw_fastrtps_cpp', 'XAUTHORITY': '/root/.Xauthority', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'ROS_DOMAIN_ID': '1', 'AMENT_PREFIX_PATH': '/ros2_ws/install/mission_control:/ros2_ws/install/mission:/ros2_ws/install/bringup:/opt/ros/humble', 'DEBIAN_FRONTEND': 'noninteractive', 'PWD': '/ros2_ws/build/mission', 'LC_ALL': 'C.UTF-8', 'PYTHONPATH': '/ros2_ws/build/mission/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/mission/lib/python3.10/site-packages:/ros2_ws/install/mission_control/lib/python3.10/site-packages:/ros2_ws/install/mission/lib/python3.10/site-packages:/ros2_ws/install/bringup/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1'}, 'shell': False}
+[1.605562] (-) TimerEvent: {}
+[1.705971] (-) TimerEvent: {}
+[1.806363] (-) TimerEvent: {}
+[1.906757] (-) TimerEvent: {}
+[1.913408] (bringup) StdoutLine: {'line': b'running egg_info\n'}
+[1.914435] (mission_control) StdoutLine: {'line': b'running egg_info\n'}
+[1.925038] (bringup) StdoutLine: {'line': b'writing ../../build/bringup/bringup.egg-info/PKG-INFO\n'}
+[1.925485] (bringup) StdoutLine: {'line': b'writing dependency_links to ../../build/bringup/bringup.egg-info/dependency_links.txt\n'}
+[1.925907] (bringup) StdoutLine: {'line': b'writing requirements to ../../build/bringup/bringup.egg-info/requires.txt\n'}
+[1.926120] (mission_control) StdoutLine: {'line': b'writing ../../build/mission_control/mission_control.egg-info/PKG-INFO\n'}
+[1.926577] (bringup) StdoutLine: {'line': b'writing top-level names to ../../build/bringup/bringup.egg-info/top_level.txt\n'}
+[1.926879] (mission_control) StdoutLine: {'line': b'writing dependency_links to ../../build/mission_control/mission_control.egg-info/dependency_links.txt\n'}
+[1.926957] (mission_control) StdoutLine: {'line': b'writing entry points to ../../build/mission_control/mission_control.egg-info/entry_points.txt\n'}
+[1.927153] (mission_control) StdoutLine: {'line': b'writing requirements to ../../build/mission_control/mission_control.egg-info/requires.txt\n'}
+[1.927363] (mission_control) StdoutLine: {'line': b'writing top-level names to ../../build/mission_control/mission_control.egg-info/top_level.txt\n'}
+[1.929325] (mission) StdoutLine: {'line': b'running egg_info\n'}
+[1.946470] (mission) StdoutLine: {'line': b'writing ../../build/mission/mission.egg-info/PKG-INFO\n'}
+[1.946910] (mission) StdoutLine: {'line': b'writing dependency_links to ../../build/mission/mission.egg-info/dependency_links.txt\n'}
+[1.947173] (mission) StdoutLine: {'line': b'writing entry points to ../../build/mission/mission.egg-info/entry_points.txt\n'}
+[1.947473] (mission) StdoutLine: {'line': b'writing requirements to ../../build/mission/mission.egg-info/requires.txt\n'}
+[1.947663] (mission) StdoutLine: {'line': b'writing top-level names to ../../build/mission/mission.egg-info/top_level.txt\n'}
+[1.951897] (mission_control) StdoutLine: {'line': b"reading manifest file '../../build/mission_control/mission_control.egg-info/SOURCES.txt'\n"}
+[1.952704] (mission_control) StdoutLine: {'line': b"writing manifest file '../../build/mission_control/mission_control.egg-info/SOURCES.txt'\n"}
+[1.953086] (mission_control) StdoutLine: {'line': b'running build\n'}
+[1.953328] (mission_control) StdoutLine: {'line': b'running build_py\n'}
+[1.953681] (mission_control) StdoutLine: {'line': b'copying mission_control/ballon_pub.py -> /ros2_ws/build/mission_control/build/lib/mission_control\n'}
+[1.953761] (mission_control) StdoutLine: {'line': b'running install\n'}
+[1.958411] (mission_control) StdoutLine: {'line': b'running install_lib\n'}
+[1.958917] (bringup) StdoutLine: {'line': b"reading manifest file '../../build/bringup/bringup.egg-info/SOURCES.txt'\n"}
+[1.959681] (bringup) StdoutLine: {'line': b"writing manifest file '../../build/bringup/bringup.egg-info/SOURCES.txt'\n"}
+[1.959974] (bringup) StdoutLine: {'line': b'running build\n'}
+[1.960097] (bringup) StdoutLine: {'line': b'running build_py\n'}
+[1.960410] (bringup) StdoutLine: {'line': b'running install\n'}
+[1.965300] (bringup) StdoutLine: {'line': b'running install_lib\n'}
+[1.969653] (mission_control) StdoutLine: {'line': b'copying /ros2_ws/build/mission_control/build/lib/mission_control/ballon_pub.py -> /ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control\n'}
+[1.971036] (mission_control) StdoutLine: {'line': b'byte-compiling /ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control/ballon_pub.py to ballon_pub.cpython-310.pyc\n'}
+[1.971794] (mission) StdoutLine: {'line': b"reading manifest file '../../build/mission/mission.egg-info/SOURCES.txt'\n"}
+[1.972539] (mission) StdoutLine: {'line': b"writing manifest file '../../build/mission/mission.egg-info/SOURCES.txt'\n"}
+[1.972760] (mission) StdoutLine: {'line': b'running build\n'}
+[1.972997] (mission) StdoutLine: {'line': b'running build_py\n'}
+[1.973341] (mission_control) StdoutLine: {'line': b'running install_data\n'}
+[1.973420] (mission_control) StdoutLine: {'line': b'running install_egg_info\n'}
+[1.973481] (mission) StdoutLine: {'line': b'running install\n'}
+[1.978327] (bringup) StdoutLine: {'line': b'running install_data\n'}
+[1.978640] (bringup) StdoutLine: {'line': b'running install_egg_info\n'}
+[1.978782] (mission) StdoutLine: {'line': b'running install_lib\n'}
+[1.986514] (mission_control) StdoutLine: {'line': b"removing '/ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control-0.0.0-py3.10.egg-info' (and everything under it)\n"}
+[1.987142] (mission_control) StdoutLine: {'line': b'Copying ../../build/mission_control/mission_control.egg-info to /ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control-0.0.0-py3.10.egg-info\n'}
+[1.989677] (mission_control) StdoutLine: {'line': b'running install_scripts\n'}
+[1.990400] (mission) StdoutLine: {'line': b'running install_data\n'}
+[1.990624] (mission) StdoutLine: {'line': b'running install_egg_info\n'}
+[1.991545] (bringup) StdoutLine: {'line': b"removing '/ros2_ws/install/bringup/lib/python3.10/site-packages/bringup-0.0.0-py3.10.egg-info' (and everything under it)\n"}
+[1.992084] (bringup) StdoutLine: {'line': b'Copying ../../build/bringup/bringup.egg-info to /ros2_ws/install/bringup/lib/python3.10/site-packages/bringup-0.0.0-py3.10.egg-info\n'}
+[1.994484] (bringup) StdoutLine: {'line': b'running install_scripts\n'}
+[2.002323] (mission) StdoutLine: {'line': b"removing '/ros2_ws/install/mission/lib/python3.10/site-packages/mission-0.0.0-py3.10.egg-info' (and everything under it)\n"}
+[2.003000] (mission) StdoutLine: {'line': b'Copying ../../build/mission/mission.egg-info to /ros2_ws/install/mission/lib/python3.10/site-packages/mission-0.0.0-py3.10.egg-info\n'}
+[2.004694] (mission) StdoutLine: {'line': b'running install_scripts\n'}
+[2.006864] (-) TimerEvent: {}
+[2.051173] (mission_control) StdoutLine: {'line': b'Installing balloon script to /ros2_ws/install/mission_control/lib/mission_control\n'}
+[2.051557] (mission_control) StdoutLine: {'line': b'Installing monitor script to /ros2_ws/install/mission_control/lib/mission_control\n'}
+[2.052038] (mission_control) StdoutLine: {'line': b"writing list of installed files to '/ros2_ws/build/mission_control/install.log'\n"}
+[2.060792] (bringup) StdoutLine: {'line': b"writing list of installed files to '/ros2_ws/build/bringup/install.log'\n"}
+[2.070745] (mission) StdoutLine: {'line': b'Installing colin_drone_node script to /ros2_ws/install/mission/lib/mission\n'}
+[2.071219] (mission) StdoutLine: {'line': b"writing list of installed files to '/ros2_ws/build/mission/install.log'\n"}
+[2.099560] (mission_control) CommandEnded: {'returncode': 0}
+[2.107063] (-) TimerEvent: {}
+[2.114059] (mission_control) JobEnded: {'identifier': 'mission_control', 'rc': 0}
+[2.116084] (bringup) CommandEnded: {'returncode': 0}
+[2.123525] (bringup) JobEnded: {'identifier': 'bringup', 'rc': 0}
+[2.125076] (mission) CommandEnded: {'returncode': 0}
+[2.131534] (mission) JobEnded: {'identifier': 'mission', 'rc': 0}
+[2.133802] (-) EventReactorShutdown: {}

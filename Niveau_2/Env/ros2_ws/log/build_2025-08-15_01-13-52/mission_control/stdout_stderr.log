@@ -1,0 +1,20 @@
+running egg_info
+writing ../../build/mission_control/mission_control.egg-info/PKG-INFO
+writing dependency_links to ../../build/mission_control/mission_control.egg-info/dependency_links.txt
+writing entry points to ../../build/mission_control/mission_control.egg-info/entry_points.txt
+writing requirements to ../../build/mission_control/mission_control.egg-info/requires.txt
+writing top-level names to ../../build/mission_control/mission_control.egg-info/top_level.txt
+reading manifest file '../../build/mission_control/mission_control.egg-info/SOURCES.txt'
+writing manifest file '../../build/mission_control/mission_control.egg-info/SOURCES.txt'
+running build
+running build_py
+running install
+running install_lib
+running install_data
+running install_egg_info
+removing '/ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control-0.0.0-py3.10.egg-info' (and everything under it)
+Copying ../../build/mission_control/mission_control.egg-info to /ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control-0.0.0-py3.10.egg-info
+running install_scripts
+Installing balloon script to /ros2_ws/install/mission_control/lib/mission_control
+Installing monitor script to /ros2_ws/install/mission_control/lib/mission_control
+writing list of installed files to '/ros2_ws/build/mission_control/install.log'

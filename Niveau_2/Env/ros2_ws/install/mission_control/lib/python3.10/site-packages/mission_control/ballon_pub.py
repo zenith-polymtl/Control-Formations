@@ -95,36 +95,42 @@ class Ballon_publisher(Node):
     def __init__(self):
         super().__init__('simple_subscriber')
         self.subscription = self.create_subscription(String, 'arrival' , self.callback, 10)
-        self.monitor_start_pub = self.create_publisher(String, 'monitor')
-        self.ballon_pub = self.create_publisher(PoseStamped, '/Ballon_pose')
+        self.monitor_start_pub = self.create_publisher(String, 'monitor', 10)
+        self.ballon_pub = self.create_publisher(PoseStamped, '/Ballon_pose', 10)
 
-        self.begin_position = (90, 50, -100)
+        self.begin_position = (10, 20, -50)
+        self.get_logger().info(f'Initialized node, wainting for arrival')
+
 
     def callback(self, msg: String):
         self.get_logger().info(f"Arrival of : {msg.data}, starting ballon run, scoring starting in 10 s")
 
         self.name = msg.data
         self.scoring_start_timer = self.create_timer(10, self.monitor_start_callback)
-        self.ballon_traj_timer = self.create_timer(0.05, self.ballon_pub)
+        self.ballon_traj_timer = self.create_timer(0.05, self.ballon_publisher)
+        self.start_time = time.time()
 
-    def ballon_pub(self):
-        msg = PoseStamped()
-        msg.header.stamp = self.get_clock().now().to_msg()
-        msg.header.frame_id = 'map'
+    def ballon_publisher(self):
 
-        self.x, self.y, self.z = build_soft_trajectory(time.time()-self.start_time) #ENU
-        msg.pose.position.x = self.x + self.begin_position[1]
-        msg.pose.position.y = self.y + self.begin_position[0]
-        msg.pose.position.z = self.z - self.begin_position[2]
+        while time.time()- self.start_time < T:
 
-        self.ballon_pub.publish(msg)
+            msg = PoseStamped()
+            msg.header.stamp = self.get_clock().now().to_msg()
+            msg.header.frame_id = 'map'
+
+            t = np.array([time.time() - self.start_time])
+            self.x, self.y, self.z = build_soft_trajectory(t)
+            msg.pose.position.x = float(self.x) + float(self.begin_position[1])
+            msg.pose.position.y = float(self.y) + float(self.begin_position[0])
+            msg.pose.position.z = float(self.z) - float(self.begin_position[2])
+
+            self.ballon_pub.publish(msg)
 
     def monitor_start_callback(self):
         msg = String()
         msg.data = 'Monitoring started... Evaluating performance'
-        self.monitor_start_callback(msg)
-        self.start_time = time.time()
-        self.destoy_timer(self.scoring_start_timer)
+        self.monitor_start_pub.publish(msg)
+        self.destroy_timer(self.scoring_start_timer)
 
 def main():
     rclpy.init()

@@ -1,0 +1,19 @@
+[1.442s] Invoking command in '/ros2_ws/src/bringup': PYTHONPATH=/ros2_ws/build/bringup/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/bringup/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/bringup build --build-base /ros2_ws/build/bringup/build install --record /ros2_ws/build/bringup/install.log --single-version-externally-managed install_data
+[1.760s] running egg_info
+[1.771s] writing ../../build/bringup/bringup.egg-info/PKG-INFO
+[1.771s] writing dependency_links to ../../build/bringup/bringup.egg-info/dependency_links.txt
+[1.771s] writing requirements to ../../build/bringup/bringup.egg-info/requires.txt
+[1.772s] writing top-level names to ../../build/bringup/bringup.egg-info/top_level.txt
+[1.796s] reading manifest file '../../build/bringup/bringup.egg-info/SOURCES.txt'
+[1.797s] writing manifest file '../../build/bringup/bringup.egg-info/SOURCES.txt'
+[1.797s] running build
+[1.797s] running build_py
+[1.797s] running install
+[1.802s] running install_lib
+[1.816s] running install_data
+[1.816s] running install_egg_info
+[1.830s] removing '/ros2_ws/install/bringup/lib/python3.10/site-packages/bringup-0.0.0-py3.10.egg-info' (and everything under it)
+[1.830s] Copying ../../build/bringup/bringup.egg-info to /ros2_ws/install/bringup/lib/python3.10/site-packages/bringup-0.0.0-py3.10.egg-info
+[1.832s] running install_scripts
+[1.895s] writing list of installed files to '/ros2_ws/build/bringup/install.log'
+[1.964s] Invoked command in '/ros2_ws/src/bringup' returned '0': PYTHONPATH=/ros2_ws/build/bringup/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/bringup/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/bringup build --build-base /ros2_ws/build/bringup/build install --record /ros2_ws/build/bringup/install.log --single-version-externally-managed install_data

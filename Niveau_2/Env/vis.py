@@ -165,7 +165,7 @@ ax3d.plot(x, y, z, linewidth=0.8, alpha=0.4)
 
 # color each point by its instantaneous speed
 sc = ax3d.scatter(x, y, z, c=speed, cmap='viridis', s=6)
-ax3d.scatter([x[0]],[y[0]],[z[0]], s=40)   # start
+ax3d.scatter([x[0]],[y[0]],[z[0]], s=70)   # start
 ax3d.scatter([x[-1]],[y[-1]],[z[-1]], s=40)  # end
 
 ax3d.set_xlim(np.min(x), np.max(x))
@@ -177,6 +177,8 @@ cb.set_label("Speed [m/s]")
 plt.title("3D Trajectory colored by speed")
 plt.show()
 
+print([x[0]],[y[0]],[z[0]])
+
 # ----- Speed vs time -----
 plt.figure(figsize=(8, 4.5))
 plt.plot(t, speed, linewidth=1.5)
@@ -185,23 +187,6 @@ plt.xlabel("Time [s]"); plt.ylabel("Speed [m/s]")
 plt.title("Speed over time")
 plt.show()
 
-# ----- Animation (point + trail), color point by speed -----
-from matplotlib.animation import FuncAnimation, PillowWriter
-from matplotlib import cm
 
-sample_step = 4
-idx = np.arange(0, len(t), sample_step)
-
-fig_anim = plt.figure(figsize=(6, 5))
-ax_anim = fig_anim.add_subplot(111, projection='3d')
-ax_anim.set_xlim(np.min(x), np.max(x))
-ax_anim.set_ylim(np.min(y), np.max(y))
-ax_anim.set_zlim(np.min(z), np.max(z))
-ax_anim.set_xlabel("X [m]"); ax_anim.set_ylabel("Y [m]"); ax_anim.set_zlabel("Z [m]")
-ax_anim.set_title("Trajectory animation (point + trail)")
-
-trail_len = 60
-point_plot, = ax_anim.plot([x[0]],[y[0]],[z[0]], marker='o', linestyle='None')
-trail_plot, = ax_anim.plot([], [], [], linewidth=2.0)
 
 

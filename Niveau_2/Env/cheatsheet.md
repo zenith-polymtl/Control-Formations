@@ -1,0 +1,3 @@
+'''
+docker exec -it env-zenith-1 bash
+'''
