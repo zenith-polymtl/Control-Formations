@@ -123,6 +123,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN /opt/ros/humble/lib/mavros/install_geographiclib_datasets.sh
 RUN pip install --no-cache-dir matplotlib
 RUN pip install --no-cache-dir pandas
+
+# put this very last so earlier layers stay cached
+ARG ZENMAV_REFRESH=0
+RUN python3 -m pip install --no-cache-dir -U zenmav && echo "refresh=$ZENMAV_REFRESH"
+
 WORKDIR /ros2_ws
 
 COPY ros2_ws/src ./src

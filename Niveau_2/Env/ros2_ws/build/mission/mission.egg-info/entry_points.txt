@@ -1,2 +1,3 @@
 [console_scripts]
+approach = misison.approach:main
 colin_drone_node = mission.colin_drone_node:main

@@ -1,0 +1,22 @@
+[1.887s] Invoking command in '/ros2_ws/src/bringup': PYTHONPATH=/ros2_ws/build/bringup/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/bringup/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/bringup build --build-base /ros2_ws/build/bringup/build install --record /ros2_ws/build/bringup/install.log --single-version-externally-managed install_data
+[2.331s] running egg_info
+[2.353s] writing ../../build/bringup/bringup.egg-info/PKG-INFO
+[2.353s] writing dependency_links to ../../build/bringup/bringup.egg-info/dependency_links.txt
+[2.354s] writing requirements to ../../build/bringup/bringup.egg-info/requires.txt
+[2.355s] writing top-level names to ../../build/bringup/bringup.egg-info/top_level.txt
+[2.398s] reading manifest file '../../build/bringup/bringup.egg-info/SOURCES.txt'
+[2.399s] writing manifest file '../../build/bringup/bringup.egg-info/SOURCES.txt'
+[2.400s] running build
+[2.400s] running build_py
+[2.400s] copying bringup/colin.launch.py -> /ros2_ws/build/bringup/build/lib/bringup
+[2.401s] running install
+[2.408s] running install_lib
+[2.429s] copying /ros2_ws/build/bringup/build/lib/bringup/colin.launch.py -> /ros2_ws/install/bringup/lib/python3.10/site-packages/bringup
+[2.430s] byte-compiling /ros2_ws/install/bringup/lib/python3.10/site-packages/bringup/colin.launch.py to colin.launch.cpython-310.pyc
+[2.430s] running install_data
+[2.431s] running install_egg_info
+[2.450s] removing '/ros2_ws/install/bringup/lib/python3.10/site-packages/bringup-0.0.0-py3.10.egg-info' (and everything under it)
+[2.452s] Copying ../../build/bringup/bringup.egg-info to /ros2_ws/install/bringup/lib/python3.10/site-packages/bringup-0.0.0-py3.10.egg-info
+[2.457s] running install_scripts
+[2.551s] writing list of installed files to '/ros2_ws/build/bringup/install.log'
+[2.640s] Invoked command in '/ros2_ws/src/bringup' returned '0': PYTHONPATH=/ros2_ws/build/bringup/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/bringup/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/bringup build --build-base /ros2_ws/build/bringup/build install --record /ros2_ws/build/bringup/install.log --single-version-externally-managed install_data

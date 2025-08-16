@@ -7,10 +7,17 @@ from threading import Lock
 import csv
 import os
 from rclpy.time import Time
+from std_msgs.msg import String
+from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 
 class PoseDistanceToCSV(Node):
     def __init__(self):
         super().__init__('pose_distance_to_csv')
+        qos_profile_BE = QoSProfile(
+            reliability=QoSReliabilityPolicy.BEST_EFFORT,
+            history=QoSHistoryPolicy.KEEP_LAST,
+            depth=8
+        )
 
         # ---------------- Params ----------------
         self.declare_parameter('topic1', '/mavros/local_position/pose')
@@ -19,6 +26,7 @@ class PoseDistanceToCSV(Node):
         self.declare_parameter('csv_path', 'pose_distances.csv')
         self.declare_parameter('description', 'Total distance between samples')
         self.declare_parameter('append', False)  # append vs overwrite CSV
+        self.monitor_start_sub = self.create_subscription(String, '/monitor', self.monitor_callback, 10)
 
         topic1 = self.get_parameter('topic1').get_parameter_value().string_value
         topic2 = self.get_parameter('topic2').get_parameter_value().string_value
@@ -30,12 +38,13 @@ class PoseDistanceToCSV(Node):
         # ---------------- State ----------------
         self.pose1 = None
         self.pose2 = None
-        self.lock = Lock()
+
         self.distance_sum = 0.0
         self.sample_count = 0
+        self.started = False
 
         # ---------------- Subscribers ----------------
-        self.create_subscription(PoseStamped, topic1, self.pose1_cb, 10)
+        self.create_subscription(PoseStamped, topic1, self.pose1_cb,  qos_profile_BE)
         self.create_subscription(PoseStamped, topic2, self.pose2_cb, 10)
 
         # ---------------- CSV ----------------
@@ -62,19 +71,28 @@ class PoseDistanceToCSV(Node):
             f"Subscribed to '{topic1}' and '{topic2}', sampling every {self.interval:.3f}s, writing to '{self.csv_path}'"
         )
 
+    def monitor_callback(self, msg: String):
+        if msg.data.lower() == 'go':
+            self.started = True
+            self.get_logger().info("Starting monitor")
+        else:
+            self.started = False
+            self.get_logger().info("Closing monitor")
+            self.destroy_node()
+            rclpy.shutdown()
+
+
     # --------- Callbacks ---------
     def pose1_cb(self, msg: PoseStamped):
-        with self.lock:
-            self.pose1 = msg
+        self.pose1 = msg
 
     def pose2_cb(self, msg: PoseStamped):
-        with self.lock:
-            self.pose2 = msg
+        self.pose2 = msg
 
     def sample_and_log(self):
-        with self.lock:
+        if self.started:
             if self.pose1 is None or self.pose2 is None:
-                self.get_logger().warn_once("Waiting for both poses before logging…")
+                self.get_logger().info("Waiting for both poses before logging…")
                 return
 
             # Use the node clock for a common "same" stamp at sampling time

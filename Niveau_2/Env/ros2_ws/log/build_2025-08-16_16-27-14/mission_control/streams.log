@@ -1,0 +1,25 @@
+[1.632s] Invoking command in '/ros2_ws/src/mission_control': PYTHONPATH=/ros2_ws/build/mission_control/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/mission_control/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/mission_control build --build-base /ros2_ws/build/mission_control/build install --record /ros2_ws/build/mission_control/install.log --single-version-externally-managed install_data
+[1.985s] running egg_info
+[2.002s] writing ../../build/mission_control/mission_control.egg-info/PKG-INFO
+[2.003s] writing dependency_links to ../../build/mission_control/mission_control.egg-info/dependency_links.txt
+[2.003s] writing entry points to ../../build/mission_control/mission_control.egg-info/entry_points.txt
+[2.004s] writing requirements to ../../build/mission_control/mission_control.egg-info/requires.txt
+[2.004s] writing top-level names to ../../build/mission_control/mission_control.egg-info/top_level.txt
+[2.033s] reading manifest file '../../build/mission_control/mission_control.egg-info/SOURCES.txt'
+[2.034s] writing manifest file '../../build/mission_control/mission_control.egg-info/SOURCES.txt'
+[2.034s] running build
+[2.034s] running build_py
+[2.035s] copying mission_control/monitor.py -> /ros2_ws/build/mission_control/build/lib/mission_control
+[2.035s] running install
+[2.040s] running install_lib
+[2.056s] copying /ros2_ws/build/mission_control/build/lib/mission_control/monitor.py -> /ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control
+[2.057s] byte-compiling /ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control/monitor.py to monitor.cpython-310.pyc
+[2.059s] running install_data
+[2.060s] running install_egg_info
+[2.078s] removing '/ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control-0.0.0-py3.10.egg-info' (and everything under it)
+[2.079s] Copying ../../build/mission_control/mission_control.egg-info to /ros2_ws/install/mission_control/lib/python3.10/site-packages/mission_control-0.0.0-py3.10.egg-info
+[2.081s] running install_scripts
+[2.154s] Installing balloon script to /ros2_ws/install/mission_control/lib/mission_control
+[2.154s] Installing monitor script to /ros2_ws/install/mission_control/lib/mission_control
+[2.155s] writing list of installed files to '/ros2_ws/build/mission_control/install.log'
+[2.215s] Invoked command in '/ros2_ws/src/mission_control' returned '0': PYTHONPATH=/ros2_ws/build/mission_control/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/mission_control/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/mission_control build --build-base /ros2_ws/build/mission_control/build install --record /ros2_ws/build/mission_control/install.log --single-version-externally-managed install_data
