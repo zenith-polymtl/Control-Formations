@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider, Button
+import matplotlib
+matplotlib.use("TkAgg")  # ou "Qt5Agg" si Qt est installé
 
 # ========= Load CSV =========
 file_path = "pose_distances.csv"   # <-- change to your actual path
