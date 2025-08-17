@@ -7,8 +7,17 @@ from threading import Lock
 import csv
 import os
 from rclpy.time import Time
-from std_msgs.msg import String
+from std_msgs.msg import String, Float32
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
+from sensor_msgs.msg import Imu  
+import tf_transformations  
+import math  
+
+def angle_diff_deg(a, b):
+    if a is None or b is None:
+        return None
+    d = (a - b + 180.0) % 360.0 - 180.0   # in (-180, 180]
+    return abs(d)
 
 class PoseDistanceToCSV(Node):
     def __init__(self):
@@ -36,16 +45,26 @@ class PoseDistanceToCSV(Node):
         append = self.get_parameter('append').get_parameter_value().bool_value
 
         # ---------------- State ----------------
-        self.pose1 = None
-        self.pose2 = None
+        self.actual_pos = None
+        self.target_pos = None
+        self.true_hdg = None
+        self.target_hdg = None
+
 
         self.distance_sum = 0.0
+        self.hdg_distance_total = 0.0
         self.sample_count = 0
         self.started = False
 
         # ---------------- Subscribers ----------------
-        self.create_subscription(PoseStamped, topic1, self.pose1_cb,  qos_profile_BE)
-        self.create_subscription(PoseStamped, topic2, self.pose2_cb, 10)
+        self.create_subscription(PoseStamped, topic1, self.actual_pos_cb,  qos_profile_BE)
+        self.create_subscription(PoseStamped, topic2, self.target_pos_cb, 10)
+        self.subscription = self.create_subscription(  
+            Imu,  
+            '/mavros/imu/data',  
+            self.imu_callback,  
+            qos_profile_BE)
+        self.hdg_sub = self.create_subscription(Float32, '/heading_target', self.hdg_target_callback, 10)
 
         # ---------------- CSV ----------------
         # If not appending, or file missing, write header
@@ -56,11 +75,11 @@ class PoseDistanceToCSV(Node):
         if self._csv_file.tell() == 0:
             self._csv_writer.writerow([
                 'sample_stamp_sec', 'sample_stamp_nanosec',
-                'pose1_stamp_sec', 'pose1_stamp_nanosec',
-                'pose1_x', 'pose1_y', 'pose1_z',
-                'pose2_stamp_sec', 'pose2_stamp_nanosec',
-                'pose2_x', 'pose2_y', 'pose2_z',
-                'distance', 'distance_sum'
+                'actual_pos_stamp_sec', 'actual_pos_stamp_nanosec',
+                'actual_pos_x', 'actual_pos_y', 'actual_pos_z',
+                'target_pos_stamp_sec', 'target_pos_stamp_nanosec',
+                'target_pos_x', 'target_pos_y', 'target_pos_z',
+                'distance', 'distance_sum', 'hdg','hdg_target', 'hdg_distance', 'hdg_distance_total'
             ])
             self._csv_file.flush()
 
@@ -70,6 +89,24 @@ class PoseDistanceToCSV(Node):
         self.get_logger().info(
             f"Subscribed to '{topic1}' and '{topic2}', sampling every {self.interval:.3f}s, writing to '{self.csv_path}'"
         )
+    
+    def hdg_target_callback(self, msg):
+        self.target_hdg = msg.data
+
+        self.get_logger().info(f'TARGET HDG : {self.target_hdg}')
+
+    def imu_callback(self, msg):  
+        # Extract quaternion components  
+        orientation = msg.orientation  
+        quaternion = [orientation.x, orientation.y, orientation.z, orientation.w]  
+          
+        # Convert to Euler angles (roll, pitch, yaw)  
+        roll, pitch, yaw = tf_transformations.euler_from_quaternion(quaternion)  
+          
+        # Convert yaw to degrees  
+        self.true_hdg = math.degrees(yaw)  
+          
+        self.get_logger().info(f'Heading: {self.true_hdg:.2f} degrees')  
 
     def monitor_callback(self, msg: String):
         if msg.data.lower() == 'go':
@@ -83,15 +120,15 @@ class PoseDistanceToCSV(Node):
 
 
     # --------- Callbacks ---------
-    def pose1_cb(self, msg: PoseStamped):
-        self.pose1 = msg
+    def actual_pos_cb(self, msg: PoseStamped):
+        self.actual_pos = msg
 
-    def pose2_cb(self, msg: PoseStamped):
-        self.pose2 = msg
+    def target_pos_cb(self, msg: PoseStamped):
+        self.target_pos = msg
 
     def sample_and_log(self):
         if self.started:
-            if self.pose1 is None or self.pose2 is None:
+            if self.actual_pos is None or self.target_pos is None:
                 self.get_logger().info("Waiting for both poses before logging…")
                 return
 
@@ -101,10 +138,10 @@ class PoseDistanceToCSV(Node):
             sstamp_nsec = int(now.nanoseconds % 1_000_000_000)
 
             # Extract data
-            p1 = self.pose1.pose.position
-            p2 = self.pose2.pose.position
-            st1 = self.pose1.header.stamp
-            st2 = self.pose2.header.stamp
+            p1 = self.actual_pos.pose.position
+            p2 = self.target_pos.pose.position
+            st1 = self.actual_pos.header.stamp
+            st2 = self.target_pos.header.stamp
 
             dx = p1.x - p2.x
             dy = p1.y - p2.y
@@ -113,12 +150,16 @@ class PoseDistanceToCSV(Node):
             self.distance_sum += distance
             self.sample_count += 1
 
+            hdg_distance = self.angle_diff_deg(self.true_hdg, self.target_hdg)
+            self.hdg_distance_total += hdg_distance
+
             # Write row
             self._csv_writer.writerow([
                 sstamp_sec, sstamp_nsec,
                 st1.sec, st1.nanosec, p1.x, p1.y, p1.z,
                 st2.sec, st2.nanosec, p2.x, p2.y, p2.z,
-                f"{distance:.6f}", f"{self.distance_sum:.6f}"
+                f"{distance:.6f}", f"{self.distance_sum:.6f}", 
+                self.true_hdg, self.target_hdg, hdg_distance, self.hdg_distance_total
             ])
             self._csv_file.flush()
 

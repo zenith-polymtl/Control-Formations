@@ -2,7 +2,7 @@
 # simple_subscriber.py
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
+from std_msgs.msg import String, Float32
 from geometry_msgs.msg import PoseStamped
 import numpy as np
 import time
@@ -97,6 +97,7 @@ class Ballon_publisher(Node):
         self.subscription = self.create_subscription(String, '/arrival' , self.callback, 10)
         self.monitor_start_pub = self.create_publisher(String, '/monitor', 10)
         self.ballon_pub = self.create_publisher(PoseStamped, '/Ballon_pose', 10)
+        self.hdg_pub = self.create_publisher(Float32, '/heading_target', 10)
 
         self.begin_position = (10, 20, -50)
         self.get_logger().info(f'Initialized node, wainting for arrival')
@@ -127,6 +128,9 @@ class Ballon_publisher(Node):
             msg.pose.position.z = float(self.z) - float(self.begin_position[2]) - float(self.initial_balloon_computed[2])
 
             self.ballon_pub.publish(msg)
+            msg2 = Float32()
+            msg2.data = 140 + 140*np.sin(0.03*t[0]) + 50*np.cos(0.08*t[0])
+            self.hdg_pub.publish(msg2)
         else:
             msg = String()
             msg.data = 'STOP'

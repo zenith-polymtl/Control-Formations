@@ -12,6 +12,7 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 from sensor_msgs.msg import Imu  
 import tf_transformations  
 import math  
+
 def angle_diff_deg(a, b):
     if a is None or b is None:
         return None
@@ -62,7 +63,7 @@ class PoseDistanceToCSV(Node):
             Imu,  
             '/mavros/imu/data',  
             self.imu_callback,  
-            10)
+            qos_profile_BE)
         self.hdg_sub = self.create_subscription(Float32, '/heading_target', self.hdg_target_callback, 10)
 
         # ---------------- CSV ----------------
