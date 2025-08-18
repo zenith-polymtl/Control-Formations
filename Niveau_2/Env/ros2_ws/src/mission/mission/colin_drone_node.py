@@ -3,7 +3,7 @@
 import rclpy
 from rclpy.node import Node
 from rclpy.time import Time  # <-- FIX: use Time for proper stamp math
-from std_msgs.msg import String
+from std_msgs.msg import String, Float32
 from geometry_msgs.msg import PoseStamped
 import time
 from zenmav.core import Zenmav
@@ -15,6 +15,7 @@ class solution(Node):
         super().__init__('solution')
         self.arrival_pub = self.create_publisher(String, '/arrival', 10)
         self.ballon_sub = self.create_subscription(PoseStamped, '/Ballon_pose', self.pos_callback, 10)
+        self.hdg_sub = self.create_subscription(Float32, '/heading_target', self.hdg_target_callback, 10)
  
         # State
         self.last_x = None
@@ -28,7 +29,7 @@ class solution(Node):
 
         self.get_logger().info('Initialized node, sending to target')
 
-        self.drone = Zenmav('tcp:127.0.0.1:5762')
+        self.drone = Zenmav('tcp:127.0.0.1:5762', gps_thresh = 0.2)
         self.go_to_first_point()
 
     def go_to_first_point(self):
@@ -38,6 +39,10 @@ class solution(Node):
         self.drone.local_target((10, 20, -50))  # NED
 
         self.arrival_pub.publish(String(data='Colin'))
+    
+    def hdg_target_callback(self, msg):
+        self.target_hdg = msg.data
+        self.get_logger().info(f'TARGET HDG : {self.target_hdg}')
 
     def health_check(self):
         # simple watchdog: if stamp didn't advance, stop following, means Ballon pos is stopped
@@ -87,7 +92,20 @@ class solution(Node):
             if self.follow:
                 # ---- FIX: keep ENU->NED mapping consistent when predicting ----
                 point = wp(py, px, -pz, frame='local')  # (N, E, D) = (py, px, -pz)
-                self.drone.local_target(point, wait_to_reach=False)
+                self.drone.global_target(point, wait_to_reach=False)
+                self.drone.connection.mav.command_long_send(  
+                    self.drone.connection.target_system,    # target_system  
+                    self.drone.connection.target_component, # target_component  
+                    115,                        # MAV_CMD_CONDITION_YAW  
+                    0,                          # confirmation  
+                    self.target_hdg,               # param1: target angle (0-360 degrees)  
+                    45,              # param2: angular speed (deg/s)  
+                    0,                  # param3: direction (-1 or 1)  
+                    1,                   # param4: relative (0) or absolute (1)  
+                    0,                          # param5: empty  
+                    0,                          # param6: empty  
+                    0                           # param7: empty  
+                )
                 self.get_logger().info(f'PREDICT {lookahead:.1f}s → {point.coordinates} m NED')
 
         # Update state for next callback

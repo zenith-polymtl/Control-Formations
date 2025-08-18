@@ -128,6 +128,13 @@ RUN pip install --no-cache-dir pandas
 ARG ZENMAV_REFRESH=0
 RUN python3 -m pip install --no-cache-dir -U zenmav && echo "refresh=$ZENMAV_REFRESH"
 
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
+ && apt-get install -y --no-install-recommends \
+       ros-humble-tf-transformations \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN python3 -m pip install --no-cache-dir --ignore-installed "transforms3d>=0.4.2"
+
 WORKDIR /ros2_ws
 
 COPY ros2_ws/src ./src
