@@ -29,16 +29,16 @@ class PoseDistanceToCSV(Node):
         )
 
         # ---------------- Params ----------------
-        self.declare_parameter('topic1', '/mavros/local_position/pose')
-        self.declare_parameter('topic2', '/Ballon_pose')
+        self.declare_parameter('drone_pos', '/mavros/local_position/pose')
+        self.declare_parameter('Balloon_pos', '/Ballon_pose')
         self.declare_parameter('interval', 0.5)  # seconds
         self.declare_parameter('csv_path', 'pose_distances.csv')
         self.declare_parameter('description', 'Total distance between samples')
         self.declare_parameter('append', False)  # append vs overwrite CSV
         self.monitor_start_sub = self.create_subscription(String, '/monitor', self.monitor_callback, 10)
 
-        topic1 = self.get_parameter('topic1').get_parameter_value().string_value
-        topic2 = self.get_parameter('topic2').get_parameter_value().string_value
+        drone_pos = self.get_parameter('drone_pos').get_parameter_value().string_value
+        Balloon_pos = self.get_parameter('Balloon_pos').get_parameter_value().string_value
         self.interval = self.get_parameter('interval').get_parameter_value().double_value
         self.csv_path = self.get_parameter('csv_path').get_parameter_value().string_value
         self.description = self.get_parameter('description').get_parameter_value().string_value
@@ -57,8 +57,8 @@ class PoseDistanceToCSV(Node):
         self.started = False
 
         # ---------------- Subscribers ----------------
-        self.create_subscription(PoseStamped, topic1, self.actual_pos_cb,  qos_profile_BE)
-        self.create_subscription(PoseStamped, topic2, self.target_pos_cb, 10)
+        self.create_subscription(PoseStamped, drone_pos, self.actual_pos_cb,  qos_profile_BE)
+        self.create_subscription(PoseStamped, Balloon_pos, self.target_pos_cb, 10)
         self.subscription = self.create_subscription(  
             Imu,  
             '/mavros/imu/data',  
@@ -79,7 +79,8 @@ class PoseDistanceToCSV(Node):
                 'actual_pos_x', 'actual_pos_y', 'actual_pos_z',
                 'target_pos_stamp_sec', 'target_pos_stamp_nanosec',
                 'target_pos_x', 'target_pos_y', 'target_pos_z',
-                'distance', 'distance_sum', 'hdg','hdg_target', 'hdg_distance', 'hdg_distance_total'
+                'distance', 'distance_sum',
+                'hdg','hdg_target', 'hdg_distance', 'hdg_distance_total'
             ])
             self._csv_file.flush()
 
@@ -87,7 +88,7 @@ class PoseDistanceToCSV(Node):
         self.create_timer(self.interval, self.sample_and_log)
 
         self.get_logger().info(
-            f"Subscribed to '{topic1}' and '{topic2}', sampling every {self.interval:.3f}s, writing to '{self.csv_path}'"
+            f"Subscribed to '{drone_pos}' and '{Balloon_pos}', sampling every {self.interval:.3f}s, writing to '{self.csv_path}'"
         )
     
     def hdg_target_callback(self, msg):

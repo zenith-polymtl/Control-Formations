@@ -20,8 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'colin_drone_node = mission.colin_drone_node:main',
-            'approach = misison.approach:main'
+            #nom_choisi = package.nom_du_fichier_sans_extension : main
+            'colin_drone_node = mission.colin_drone_node:main'
         ],
     },
 )

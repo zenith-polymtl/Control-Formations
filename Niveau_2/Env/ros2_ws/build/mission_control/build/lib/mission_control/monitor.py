@@ -79,7 +79,8 @@ class PoseDistanceToCSV(Node):
                 'actual_pos_x', 'actual_pos_y', 'actual_pos_z',
                 'target_pos_stamp_sec', 'target_pos_stamp_nanosec',
                 'target_pos_x', 'target_pos_y', 'target_pos_z',
-                'distance', 'distance_sum', 'hdg','hdg_target', 'hdg_distance', 'hdg_distance_total'
+                'distance', 'distance_sum',
+                'hdg','hdg_target', 'hdg_distance', 'hdg_distance_total'
             ])
             self._csv_file.flush()
 
