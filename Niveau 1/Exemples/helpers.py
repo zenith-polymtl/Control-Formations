@@ -3,8 +3,8 @@ from zenmav.core import *
 drone = Zenmav(ip = 'tcp:127.0.0.1:5763')
 
 radius = drone.get_param('WPNAV_RADIUS')
-drone.get_param('WPNAV_RADIUS', radius*1.2)
-answer = input('enter y to download all parameters').lower()
+drone.set_param('WPNAV_RADIUS', radius*1.2)
+answer = input('enter y to download all parameters : ').lower()
 if answer == 'y':
     drone.download_all_params('my_first_params.param')
 

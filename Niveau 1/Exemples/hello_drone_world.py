@@ -18,15 +18,14 @@ print(f"Home frame : {home.frame}")
 height  = float(input('Enter height above home : '))
 drone.global_target([home.lat, home.lon, height])
 
-local_point = wp(25, 30, -10, frame = "local")
+local_point = wp(-25, 30, -10, frame = "local")
 
 drone.local_target(local_point)
 
 local_point.show()
-print(local_point.coordinates)
 
 input("Press Enter to scan...")
-drone.rectilinear_scan(scan_radius=40, center = local_point.coordinates)
-drone.orbit(center = local_point, radius = 40, speed = 5)
+drone.rectilinear_scan(scan_radius=40, detection_width=10, center = local_point)
+drone.orbit(center = local_point, radius = 40, speed = 5, N_turns=1)
 input("Press Enter to return to home...")
 drone.RTL()
