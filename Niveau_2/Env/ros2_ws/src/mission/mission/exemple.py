@@ -46,14 +46,14 @@ class solution(Node):
             self.get_parameter("takeoff_alt").get_parameter_value().double_value
         )
 
-        self.declare_parameter("look_ahead", 2.25)
+        self.declare_parameter("look_ahead", 2.0)
         self.look_ahead = (
             self.get_parameter("look_ahead").get_parameter_value().double_value
         )
 
         self.get_logger().info('Initialized node, sending to target')
 
-        self.drone = Zenmav(zenmav_ip, gps_thresh = 2.0) # Zenmav instance to access high level functions
+        self.drone = Zenmav(zenmav_ip, gps_thresh = 0.2) # Zenmav instance to access high level functions
         self.go_to_first_point() 
 
     def go_to_first_point(self):
