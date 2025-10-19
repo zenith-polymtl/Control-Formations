@@ -34,7 +34,7 @@ class PoseDistanceToCSV(Node):
         self.declare_parameter("drone_pos", "/mavros/local_position/pose")
         self.declare_parameter("Balloon_pos", "/Ballon_pose")
         self.declare_parameter("interval", 0.5)  # seconds
-        self.declare_parameter("csv_path", "/graph/pose_distances.csv")
+        self.declare_parameter("csv_path", "graph/pose_distances.csv")
         self.declare_parameter("description", "Total distance between samples")
         self.declare_parameter("append", False)  # append vs overwrite CSV
         self.monitor_start_sub = self.create_subscription(

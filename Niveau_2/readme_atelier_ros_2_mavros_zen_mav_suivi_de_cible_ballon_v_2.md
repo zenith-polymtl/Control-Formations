@@ -1,9 +1,18 @@
 # 🛰️ Atelier Docker / ROS 2 + MAVROS
 
+
+
 ### Suivi d’une cible mobile (“Ballon”) et évaluation automatique
 
 > **But** — Concevoir un nœud ROS 2 qui suit une cible mobile et démontrer la maîtrise des bases ROS 2 dans un contexte drone, en utilisant **MAVROS** (pont ROS 2 ↔︎ MAVLink) et/ou des abstractions haut-niveau comme **ZenMav**. Le tout est évalué par un **nœud moniteur** fourni.
 
+
+## Pré-requis
+
+- Un ensemble Ubuntu + distro ROS2 compatible. En 2025-2026, on utilise ubuntu 22.04, avec ros2 humble
+- Un simulateur de Ardupilot (Mission Planner/ Gazebo/ Airsim)
+- Avoir effectué la formation MOGI-ROS au préalable :
+https://github.com/MOGI-ROS/Week-1-2-Introduction-to-ROS2
 ---
 
 ## 1) Docker
@@ -108,7 +117,7 @@ docker exec -it env-zenith-1 bash
 
 * **Générateur de cible (“Ballon”)** : publie une pose cible qui évolue dans le temps et signale le début/fin d’une session.
 * **Moniteur** : souscrit aux flux pertinents (cible + drone) et calcule des métriques (erreurs, cumulés, résumé). Sort un rapport (p. ex. CSV).
-* **Solution d’exemple** : une implémentation minimale de suivi. **À consulter seulement après votre propre tentative (idéalement)**.
+* **Solution d’exemple** : une implémentation de suivi avec un look ahead selon la dérivée. **À consulter seulement après votre propre tentative (idéalement)**.
 
 > Les noms de topics exacts, frames et détails d’implémentation sont visibles directement dans les fichiers.
 
@@ -153,16 +162,20 @@ https://docs.ros.org/en/humble/Concepts/Intermediate/About-Quality-of-Service-Se
 
 ## 5) Couches drone : MAVROS, MAVLink et ZenMav
 
-* **MAVROS** : pont ROS 2 ↔︎ MAVLink. Il expose la télémétrie (pose, IMU, état) et des interfaces de commande (positions/vitesses/attitude) sous forme de topics/services/actions ROS 2. *N’expose pas les messages de télémétrie par défaut.* Pour avoir la télémétrie :
+* **MAVROS** : pont ROS 2 ↔︎ MAVLink. Il expose la télémétrie (pose, IMU, état) et des interfaces de commande (positions/vitesses/attitude) sous forme de topics/services/actions ROS 2.
+Pour un AI spécialisé sur MAVROS:
+https://deepwiki.com/mavlink/mavros/1-mavros-overview
+
+ *N’expose pas les messages de télémétrie par défaut.* Pour avoir la télémétrie :
 
   ```bash
   ros2 service call /mavros/set_message_interval \
   mavros_msgs/srv/MessageInterval "{message_id: 32, message_rate: 20.0}"
   ```
 * **MAVLink** : protocole bas niveau (messages, modes, armement, consignes).
-* **ZenMav** : **option** haut-niveau (Python) qui encapsule des séquences courantes (mode/armement/consignes). Vous pouvez **tout** faire avec MAVROS seul, **ou** utiliser ZenMav pour simplifier — au choix du participant.
+* **Zenmav** : **option** haut-niveau (Python) qui encapsule des séquences courantes (mode/armement/consignes). Vous pouvez **tout** faire avec MAVROS seul, **ou** utiliser ZenMav pour simplifier — au choix du participant.
 
-> L’atelier **n’impose pas** d’API de commande. Choisissez **MAVROS pur** ou **ZenMav** selon vos préférences et la situation. **Toutefois**, plusieurs fonctions de ZenMav sont **bloquantes**, et devront être évitées afin de ne pas bloquer la réception et l’envoi de messages d’un nœud (selon le contexte).
+> L’atelier **n’impose pas** d’API de commande. Choisissez **MAVROS pur** ou **ZenMav** selon vos préférences et la situation. **Toutefois**, plusieurs fonctions de ZenMav sont **bloquantes**, et devront être évitées afin de ne pas bloquer la réception et l’envoi de messages d’un nœud (selon le contexte). De manière général zenmav est plus rapide, mais mavros est beaucoup plus puissant à long terme dans les gros projets. 
 
 ---
 
@@ -203,7 +216,7 @@ https://docs.ros.org/en/humble/Concepts/Intermediate/About-Quality-of-Service-Se
      ```bash
      ros2 launch bringup nom_de_file.launch.py
      ```
-1. **Rendez-vous** : se rendre à la coordonnée **(10, 20, -50)**, donnée en système local **NED**.
+1. **Rendez-vous** : se rendre à la coordonnée **(10, 20, 50)**, donnée en système local **NEU** (North-East-Up).
 2. **Annonce d’amorce** : publier votre nom (`std_msgs/String`) sur le topic **`/arrival`**. Un décompte commencera peu après pour le début du défi.
 3. **Suivi de cible** : la position d’un ballon virtuel est publiée sur **`/Ballon_pose`**. Votre objectif est d’être le plus proche de ce point **à sa publication**.
 
