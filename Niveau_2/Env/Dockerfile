@@ -52,18 +52,6 @@ RUN python3 -m pip install -U \
 
 # Install ROS visualization & extra tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libxcb-cursor0 \
-    libxcb-xinerama0 \
-    libxcb-randr0 \
-    libxcb-icccm4 \
-    libxcb-keysyms1 \
-    libxcb-shape0 \
-    libxcb-render-util0 \
-    libxcb-xkb1 \
-    libxkbcommon-x11-0 \
-    iputils-ping \
-    iproute2 \
-    apt-file \
     ros-humble-mavros \
     ros-humble-mavros-extras \
     ros-humble-mavlink \
@@ -75,49 +63,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 
-
-
-# GUI dependencies for webview/X11 (not PyQt)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libx11-xcb1 \
-    libglu1-mesa \
-    libxrender1 \
-    libxcomposite1 \
-    libxcursor1 \
-    libxdamage1 \
-    libxrandr2 \
-    libxtst6 \
-    libxi6 \
-    libglib2.0-0 \
-    libsm6 \
-    libnss3 \
-    libatk1.0-0 \
-    libatk-bridge2.0-0 \
-    libgtk-3-0 \
-    libxss1 \
-    libasound2 \
-    libpangocairo-1.0-0 \
-    libgdk-pixbuf2.0-0 \
-    libdbus-glib-1-2 \
-    libnotify4 \
-    libgconf-2-4 \
-    x11-xserver-utils \
-    webkit2gtk-4.0 \
-    libwebkit2gtk-4.0-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install pywebview for GUI browser apps
-RUN python3 -m pip install --no-cache-dir pywebview
-
 # Install FastAPI and Uvicorn
 RUN python3 -m pip install fastapi uvicorn[standard]
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3-gi \
-    python3-gi-cairo \
-    gir1.2-webkit2-4.0 \
-    gir1.2-gtk-3.0 \
-    && rm -rf /var/lib/apt/lists/*
 
 # Set up workspace
 RUN /opt/ros/humble/lib/mavros/install_geographiclib_datasets.sh
