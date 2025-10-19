@@ -52,13 +52,35 @@
 ---
 
 ## 6) Tâches à réaliser (dans l’ordre)
-1. **Initialisation** : créer un nœud ROS 2 (rclpy), configurer publishers/subscribers, déclarer des paramètres (altitude cible, gains, limites de vitesse, etc.).
-2. **Acquisition** : souscrire à la *pose cible* (Ballon) et à la *pose drone* ainsi qu’aux états utiles (IMU, état de connexion), selon ce qui est exposé par MAVROS.
-3. **Référentiels & conversions** : valider frame_id, coordonnée Z (Up/Down), axes X/Y (Est/Nord). Implémenter une conversion ENU↔︎NED si nécessaire.
-4. **Boucle de contrôle** : via un **timer** périodique, calculer la commande en utilisant la dernière cible reçue (poursuite directe, filtrage, limitation des accélérations/vitesses, gestion de dt).
-5. **Commande** : publier la consigne appropriée (position locale, vitesse locale, etc.) par l’interface choisie (MAVROS ou ZenMav). Éviter les appels bloquants dans les callbacks ; préférez une file d’état traitée dans le timer.
-6. **Déclenchement de session** : interagir avec les signaux fournis (début/fin) pour que votre nœud soit évalué au bon moment.
-7. **Instrumentation** : ajouter des logs (INFO/WARN), éventuellement publier une distance estimée pour le débogage (optionnel).
+1. **Initialisation** : Créer un nœud ROS 2 (rclpy), configurer publishers/subscribers, possible de déclarer des paramètres (altitude cible, gains, limites de vitesse, etc.). Ajouter ce noeud dans le setup.py. Créer son propre launch file avec son noeud. À ce point vous pourrez lancer votre simulation avec : ros2 launch bringup nom_de_file.launch.py
+
+1. **Rendez vous** : Se rendre à la coordonnée (10,20, -50) , donnée en système NED
+
+2. **Annonce d'amorce** : Publier son nom (String), au topic /arrival. Un décompte commencera peu après pour le début du défi.
+
+3. **Suivi de cible** : La position d'un ballon virtuel sera publiée sur le topic /Ballon_pose. Votre objectif est d'être le plus proche de ce point à sa publication.
+
+La trajectoire est :
+ - Continue, mais publiée discrète
+ - Réalisable
+ - Théoriquement parfaite (sans bruit rapide)
+
+Les points sont de type PoseStamped, et seront données en système ENU.
+
+ 4. **Être proche du ballon** : Vous serez évaluez sur votre distance à la cible, à chaque publication de la cible, même si vous la connaissez pas d'avance. Vous n'aurez aucune information future sur la trajectoire.
+
+ 5. **RTL à la fin** : Après 2 minutes, les points cesseront d'être publiés, sans avertissement. À ce moment, le drone doit retourner au décollage pour y atterir.
+
+ 6. **Évaluation de performance** :
+ 
+
+
+
+
+
+
+
+
 
 ---
 

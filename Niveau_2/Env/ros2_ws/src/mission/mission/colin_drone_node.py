@@ -42,7 +42,7 @@ class solution(Node):
 
     def go_to_first_point(self):
         # Watch out! Takeoff and local target when wait_to_reach=True (default) are blocking calls
-        # Will block messages until done, bad practice!
+        # Will block messages until done, bad practice! If used in mission, need to set wait_to_reach = False, and implement another system
         self.drone.set_mode('GUIDED')
         self.drone.arm()
         self.drone.takeoff(10)
@@ -86,7 +86,7 @@ class solution(Node):
             dydt = (self.y - self.last_y) / dt
             dzdt = (self.z - self.last_z) / dt
 
-            # Simple constant-velocity prediction 2 s lookahead, pretty hacky solution!
+            # Simple constant-velocity prediction 2 s derivative feedforward, pretty hacky but simple solution!
             # I just did trial and error until I had a fair result
             lookahead = 2.0  # seconds
             px = self.x + dxdt * lookahead
@@ -110,7 +110,7 @@ class solution(Node):
             self.last_stamp_health = self.ballon_stamp
         else:
             self.follow = False
-            self.drone.RTL()
+            self.drone.set_mode('RTL')
 
 def main():
     rclpy.init()
