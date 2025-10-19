@@ -1,6 +1,6 @@
-from Zenmav.core import *
+from zenmav.core import *
 
-mav = pymav(ip = 'tcp:127.0.0.1:5763')
+mav = Zenmav(ip = 'tcp:127.0.0.1:5763')
 
 mav.set_mode('GUIDED')
 mav.arm()

@@ -1,23 +1,31 @@
-from Zenmav.core import *
+from zenmav.core import Zenmav
+from zenmav.zenpoint import wp
+drone = Zenmav(ip = 'tcp:127.0.0.1:5763', gps_thresh=1.6)
 
-mav = pymav(ip = 'tcp:127.0.0.1:5763', gps_thresh=1.6)
+drone.set_mode('GUIDED')
 
-mav.set_mode('GUIDED')
 
-if 0:
-    mav.arm()
-    mav.takeoff(altitude = 10)
+drone.arm()
+drone.takeoff(altitude = 10)
 
-i = 0
-while i<8000 :
-    target = mav.convert_to_global((100,50))
-    target.append(10)  # Altitude in meters
-    print(f"Target: {target}")
-    mav.global_target(target )
-    i += 1
 
+
+drone.local_target((50, 60, -10))
+
+home = drone.home
+print(f"Home frame : {home.frame}")
+
+height  = float(input('Enter height above home : '))
+drone.global_target([home.lat, home.lon, height])
+
+local_point = wp(-25, 30, -10, frame = "local")
+
+drone.local_target(local_point)
+
+local_point.show()
 
 input("Press Enter to scan...")
-mav.rectilinear_scan(rayon_scan=40)
+drone.rectilinear_scan(scan_radius=40, detection_width=10, center = local_point)
+drone.orbit(center = local_point, radius = 40, speed = 5, N_turns=1)
 input("Press Enter to return to home...")
-mav.RTL()
+drone.RTL()
