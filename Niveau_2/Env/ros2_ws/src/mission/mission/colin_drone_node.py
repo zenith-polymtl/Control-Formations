@@ -36,9 +36,13 @@ class solution(Node):
         self.first = True # first callback flag
         self.follow = True # following flag
 
+        self.declare_parameter("zenmav_ip", "tcp:127.0.0.1:5762")
+        zenmav_ip = (
+            self.get_parameter("zenmav_ip").get_parameter_value().string_value
+        )
         self.get_logger().info('Initialized node, sending to target')
 
-        self.drone = Zenmav('tcp:127.0.0.1:5762', gps_thresh = 2.0) # Zenmav instance to access high level functions
+        self.drone = Zenmav(zenmav_ip, gps_thresh = 2.0) # Zenmav instance to access high level functions
         self.go_to_first_point() 
 
     def go_to_first_point(self):
