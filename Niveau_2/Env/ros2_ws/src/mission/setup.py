@@ -13,15 +13,15 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='root',
-    maintainer_email='root@todo.todo',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    maintainer='Colin Rousseau',
+    maintainer_email='colin.rousseau@etud.polymtl.ca',
+    description='Répertoire des fichiers qui concerne la mission principale',
+    license='Apache 2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
             #nom_choisi = package.nom_du_fichier_sans_extension : main
-            'colin_drone_node = mission.colin_drone_node:main'
+            'exemple = mission.exemple:main'
         ],
     },
 )

@@ -13,8 +13,28 @@ def col(name):
     # but convert to numeric 1-D arrays.
     return pd.to_numeric(df[name], errors="coerce").to_numpy().ravel()
 
-p1x, p1y, p1z = col("pose1_x"), col("pose1_y"), col("pose1_z")
-p2x, p2y, p2z = col("pose2_x"), col("pose2_y"), col("pose2_z")
+
+# Compatibility helper: try multiple possible column names (older scripts may
+# expect pose1_*/pose2_*, but the CSV produced by monitor.py uses
+# actual_pos_*/target_pos_*).
+def get_col(*names):
+    for name in names:
+        if name in df.columns:
+            return pd.to_numeric(df[name], errors="coerce").to_numpy().ravel()
+    raise ValueError(f"Missing expected column(s): {names}")
+
+
+# Positions: prefer pose1_/pose2_ names, fall back to actual_pos_/target_pos_
+p1x, p1y, p1z = (
+    get_col("pose1_x", "actual_pos_x"),
+    get_col("pose1_y", "actual_pos_y"),
+    get_col("pose1_z", "actual_pos_z"),
+)
+p2x, p2y, p2z = (
+    get_col("pose2_x", "target_pos_x"),
+    get_col("pose2_y", "target_pos_y"),
+    get_col("pose2_z", "target_pos_z"),
+)
 
 # Total distance if available
 total_distance = None
@@ -28,29 +48,31 @@ if "distance_sum" in df.columns:
 fig = plt.figure(figsize=(9, 7))
 ax = fig.add_subplot(111, projection="3d")
 
-ax.plot(p1x, p1y, p1z, label="pose1", linewidth=1.5)
-ax.plot(p2x, p2y, p2z, label="pose2", linewidth=1.5)
+ax.plot(p1x, p1y, p1z, label="measured", linewidth=1.5)
+ax.plot(p2x, p2y, p2z, label="target", linewidth=1.5)
 
 # Mark start/end (guard against empty/NaN)
 def first_finite(a):
     idx = np.where(np.isfinite(a))[0]
     return idx[0] if idx.size else None
 
+
 def last_finite(a):
     idx = np.where(np.isfinite(a))[0]
     return idx[-1] if idx.size else None
+
 
 i1s, i1e = first_finite(p1x), last_finite(p1x)
 j1s, j1e = first_finite(p2x), last_finite(p2x)
 
 if i1s is not None:
-    ax.scatter(p1x[i1s], p1y[i1s], p1z[i1s], marker="o", s=40, label="pose1 start")
+    ax.scatter(p1x[i1s], p1y[i1s], p1z[i1s], marker="o", s=40, label="Measured start")
 if i1e is not None:
-    ax.scatter(p1x[i1e], p1y[i1e], p1z[i1e], marker="^", s=40, label="pose1 end")
+    ax.scatter(p1x[i1e], p1y[i1e], p1z[i1e], marker="^", s=40, label="Measured end")
 if j1s is not None:
-    ax.scatter(p2x[j1s], p2y[j1s], p2z[j1s], marker="o", s=40, label="pose2 start")
+    ax.scatter(p2x[j1s], p2y[j1s], p2z[j1s], marker="o", s=40, label="Target start")
 if j1e is not None:
-    ax.scatter(p2x[j1e], p2y[j1e], p2z[j1e], marker="^", s=40, label="pose2 end")
+    ax.scatter(p2x[j1e], p2y[j1e], p2z[j1e], marker="^", s=40, label="Target end")
 
 ax.set_xlabel("X [m]")
 ax.set_ylabel("Y [m]")
@@ -73,9 +95,11 @@ def finite_concat(*arrays):
             out.append(a[m])
     return np.concatenate(out) if out else np.array([])
 
+
 xs = finite_concat(p1x, p2x)
 ys = finite_concat(p1y, p2y)
 zs = finite_concat(p1z, p2z)
+
 
 def padded_limits(arr):
     if arr.size == 0:
@@ -89,6 +113,7 @@ def padded_limits(arr):
     span = hi - lo
     pad = 0.05 * span
     return (lo - pad, hi + pad)
+
 
 xlim = padded_limits(xs)
 ylim = padded_limits(ys)

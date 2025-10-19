@@ -1,3 +1,0 @@
-sample_stamp_sec,sample_stamp_nanosec,actual_pos_stamp_sec,actual_pos_stamp_nanosec,actual_pos_x,actual_pos_y,actual_pos_z,target_pos_stamp_sec,target_pos_stamp_nanosec,target_pos_x,target_pos_y,target_pos_z,distance,distance_sum,hdg,hdg_target,hdg_distance,hdg_distance_total
-
-Total distance between samples,,,,,,,,,,,,TOTAL_DISTANCE,12.017144

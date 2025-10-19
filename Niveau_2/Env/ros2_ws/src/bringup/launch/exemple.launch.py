@@ -6,9 +6,11 @@ def generate_launch_description():
     return LaunchDescription([
         Node(
             package='mission',
-            executable='colin_drone_node',   # mission/colin_drone_node.py : main()
-            name='colin_drone_node',
+            executable='exemple',   # mission/colin_drone_node.py : main()
+            name='exemple',
             output='screen',
+            parameters=[{'look_ahead' : 2.0},
+                        {'takeoff_alt' : 10.0}]
         ),
         Node(
             package='mission_control',

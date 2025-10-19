@@ -2,7 +2,7 @@
 # simple_subscriber.py
 import rclpy
 from rclpy.node import Node
-from rclpy.time import Time  # <-- FIX: use Time for proper stamp math
+from rclpy.time import Time 
 from std_msgs.msg import String, Float32
 from geometry_msgs.msg import PoseStamped
 import time
@@ -17,6 +17,7 @@ class solution(Node):
         #Définition des publishers et subscribers
         #self.nom_choisi_pub = self.create_publisher(#Type de variable ROS2, doit être importé#, '/nom_choisi', #quality of service ou queue size#)
         self.arrival_pub = self.create_publisher(String, '/arrival', 10)
+        self.command_pub = self.create_publisher(PoseStamped, '/mavros/setpoint_position/local', 10)
 
         ##self.nom_choisi_sub = self.create_subscription(
         # #Type de variable ROS2#,
@@ -35,9 +36,24 @@ class solution(Node):
         self.first = True # first callback flag
         self.follow = True # following flag
 
+        self.declare_parameter("zenmav_ip", "tcp:127.0.0.1:5762")
+        zenmav_ip = (
+            self.get_parameter("zenmav_ip").get_parameter_value().string_value
+        )
+
+        self.declare_parameter("takeoff_alt", 10.0)
+        self.takeoff_alt = (
+            self.get_parameter("takeoff_alt").get_parameter_value().double_value
+        )
+
+        self.declare_parameter("look_ahead", 2.25)
+        self.look_ahead = (
+            self.get_parameter("look_ahead").get_parameter_value().double_value
+        )
+
         self.get_logger().info('Initialized node, sending to target')
 
-        self.drone = Zenmav('tcp:127.0.0.1:5762', gps_thresh = 0.2) # Zenmav instance to access high level functions
+        self.drone = Zenmav(zenmav_ip, gps_thresh = 2.0) # Zenmav instance to access high level functions
         self.go_to_first_point() 
 
     def go_to_first_point(self):
@@ -45,11 +61,13 @@ class solution(Node):
         # Will block messages until done, bad practice! If used in mission, need to set wait_to_reach = False, and implement another system
         self.drone.set_mode('GUIDED')
         self.drone.arm()
-        self.drone.takeoff(10)
+        self.drone.takeoff(self.takeoff_alt)
         self.drone.local_target((10, 20, -50))  # NED
 
         #Publish a message to signal arrival and start the challenge
-        self.arrival_pub.publish(String(data='Colin'))
+        msg = String()
+        msg.data = 'Colin'
+        self.arrival_pub.publish(msg)
     
 
     def pos_callback(self, msg: PoseStamped):
@@ -88,16 +106,21 @@ class solution(Node):
 
             # Simple constant-velocity prediction 2 s derivative feedforward, pretty hacky but simple solution!
             # I just did trial and error until I had a fair result
-            lookahead = 2.0  # seconds
+            lookahead = self.look_ahead  # seconds
             px = self.x + dxdt * lookahead
             py = self.y + dydt * lookahead
             pz = self.z + dzdt * lookahead
 
             if self.follow:
                 #keep ENU->NED mapping consistent when predicting ----
-                point = wp(py, px, -pz, frame='local')  # (N, E, D) = (py, px, -pz)
-                self.drone.global_target(point, wait_to_reach=False) #Zenmav converts local to global if needed!
-                self.get_logger().info(f'PREDICT {lookahead:.1f}s → {point.coordinates} m NED')
+                msg = PoseStamped()
+                msg.pose.position.x = px
+                msg.pose.position.y = py
+                msg.pose.position.z = pz
+
+                self.command_pub.publish(msg)
+
+                self.get_logger().info(f'PREDICT {lookahead:.2f}s → {(py, px, -pz)} m ENU')
 
         # Update state for next callback
         self.last_stamp = self.ballon_stamp
