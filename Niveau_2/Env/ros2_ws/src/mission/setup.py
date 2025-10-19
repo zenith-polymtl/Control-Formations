@@ -21,7 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             #nom_choisi = package.nom_du_fichier_sans_extension : main
-            'colin_drone_node = mission.colin_drone_node:main'
+            'exemple = mission.colin_drone_node:main'
         ],
     },
 )

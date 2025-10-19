@@ -4,6 +4,41 @@
 
 > **But** — Concevoir un nœud ROS 2 qui suit une cible mobile et démontrer la maîtrise des bases ROS 2 dans un contexte drone, en utilisant **MAVROS** (pont ROS 2↔︎MAVLink) et/ou des abstractions haut‑niveau comme **ZenMav**. Le tout est évalué par un nœud moniteur fourni.
 
+## 1) Docker
+ **Installation de Docker** : 
+
+ Suivre les instructions using apt
+
+ https://docs.docker.com/engine/install/ubuntu/
+
+Pour build le docker, être dans un terminal au même niveau que le dockerfile :
+
+'''
+docker compose up --build
+'''
+
+Pour lancer un docker déjà bati
+'''
+
+'''
+docker compose up
+'''
+
+Pour fermer un docker (important après une séance)
+
+'''
+docker compose down
+
+'''
+
+Pour ouvrir un terminal dans ce docker, ouvrir autant que nécessaire
+
+'''
+docker exec -it env-zenith-1 bash
+
+'''
+
+
 ---
 
 ## 1) Ce que vous allez apprendre
@@ -17,7 +52,7 @@
 ## 2) Les trois fichiers fournis (aperçu)
 - **Générateur de cible (“Ballon”)** : publie une pose cible qui évolue dans le temps et signale le début/fin d’une session.
 - **Moniteur** : souscrit aux flux pertinents (cible + drone) et calcule des métriques (erreurs, cumulés, résumé). Sort un rapport (p. ex. CSV).
-- **Solution d’exemple** : une implémentation minimale de suivi. **À consulter seulement après votre propre tentative.**
+- **Solution d’exemple** : une implémentation minimale de suivi. **À consulter seulement après votre propre tentative. (Idéalement)**
 
 > Les noms de topics exacts, frames et détails d’implémentation sont visibles directement dans les fichiers.
 
@@ -36,12 +71,12 @@
 ---
 
 ## 4) Couches drone : MAVROS, MAVLink et ZenMav
-- **MAVROS** : pont ROS 2↔︎MAVLink. Il expose la télémétrie (pose, IMU, état) et des interfaces de commande (positions/vitesses/attitude) sous forme de topics/services/actions ROS 2.
+- **MAVROS** : pont ROS 2↔︎MAVLink. Il expose la télémétrie (pose, IMU, état) et des interfaces de commande (positions/vitesses/attitude) sous forme de topics/services/actions ROS 2. N'expose pas les messages de télémétrie par défault. Pour avoir la télémétrie faire :
+ros2 service call /mavros/set_message_interval mavros_msgs/srv/MessageInterval "{message_id: 32, message_rate: 20.0}" 
 - **MAVLink** : protocole bas niveau (messages, modes, armement, consignes).
 - **ZenMav** : **option** haut‑niveau (Python) qui encapsule des séquences courantes (mode/armement/consignes). Vous pouvez **tout** faire avec MAVROS seul, **ou** utiliser ZenMav pour simplifier—au choix du participant.
 
-> L’atelier **n’impose pas** d’API de commande. Choisissez **MAVROS pur** ou **ZenMav** selon vos préférences.
-
+> L’atelier **n’impose pas** d’API de commande. Choisissez **MAVROS pur** ou **ZenMav** selon vos préférences mais surtout les situations. Plusieurs fonctions de Zenmav sont bloquantes, et devront être évitées afin de ne pas bloquer la réception et l'envoie de message d'une node. Dépend de la situation
 ---
 
 ## 5) Architecture de l’atelier (vue logique)
@@ -71,8 +106,7 @@ Les points sont de type PoseStamped, et seront données en système ENU.
 
  5. **RTL à la fin** : Après 2 minutes, les points cesseront d'être publiés, sans avertissement. À ce moment, le drone doit retourner au décollage pour y atterir.
 
- 6. **Évaluation de performance** :
- 
+ 6. **Évaluation de performance** : Un csv de vos performances sera produit dans le répertoir ros2_ws. Le fichier python permet de visualiser la performance. Nécessite d'avoir les modules pandas, numpy et matplotlib. Installation standard avec pip dans le terminal
 
 
 

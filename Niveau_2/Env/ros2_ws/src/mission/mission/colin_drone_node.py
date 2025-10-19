@@ -2,7 +2,7 @@
 # simple_subscriber.py
 import rclpy
 from rclpy.node import Node
-from rclpy.time import Time  # <-- FIX: use Time for proper stamp math
+from rclpy.time import Time 
 from std_msgs.msg import String, Float32
 from geometry_msgs.msg import PoseStamped
 import time
@@ -17,6 +17,7 @@ class solution(Node):
         #Définition des publishers et subscribers
         #self.nom_choisi_pub = self.create_publisher(#Type de variable ROS2, doit être importé#, '/nom_choisi', #quality of service ou queue size#)
         self.arrival_pub = self.create_publisher(String, '/arrival', 10)
+        self.command_pub = self.create_publisher(PoseStamped, '/mavros/setpoint_position/local', 10)
 
         ##self.nom_choisi_sub = self.create_subscription(
         # #Type de variable ROS2#,
@@ -37,7 +38,7 @@ class solution(Node):
 
         self.get_logger().info('Initialized node, sending to target')
 
-        self.drone = Zenmav('tcp:127.0.0.1:5762', gps_thresh = 0.2) # Zenmav instance to access high level functions
+        self.drone = Zenmav('tcp:127.0.0.1:5762', gps_thresh = 2.0) # Zenmav instance to access high level functions
         self.go_to_first_point() 
 
     def go_to_first_point(self):
@@ -95,9 +96,14 @@ class solution(Node):
 
             if self.follow:
                 #keep ENU->NED mapping consistent when predicting ----
-                point = wp(py, px, -pz, frame='local')  # (N, E, D) = (py, px, -pz)
-                self.drone.global_target(point, wait_to_reach=False) #Zenmav converts local to global if needed!
-                self.get_logger().info(f'PREDICT {lookahead:.1f}s → {point.coordinates} m NED')
+                msg = PoseStamped()
+                msg.pose.position.x = px
+                msg.pose.position.y = py
+                msg.pose.position.z = pz
+
+                self.command_pub.publish(msg)
+
+                self.get_logger().info(f'PREDICT {lookahead:.1f}s → {(py, px, -pz)} m ENU')
 
         # Update state for next callback
         self.last_stamp = self.ballon_stamp
