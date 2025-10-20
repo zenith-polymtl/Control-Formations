@@ -53,7 +53,7 @@ class solution(Node):
 
         self.get_logger().info('Initialized node, sending to target')
 
-        self.drone = Zenmav(zenmav_ip, gps_thresh = 0.2) # Zenmav instance to access high level functions
+        self.drone = Zenmav(zenmav_ip) # Zenmav instance to access high level functions
         self.go_to_first_point() 
 
     def go_to_first_point(self):
