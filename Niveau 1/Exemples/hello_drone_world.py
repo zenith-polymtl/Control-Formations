@@ -1,6 +1,6 @@
 from zenmav.core import Zenmav
 from zenmav.zenpoint import wp
-drone = Zenmav(ip = 'tcp:127.0.0.1:5763', gps_thresh=1.6)
+drone = Zenmav(ip = 'tcp:127.0.0.1:5763', gps_thresh=3)
 
 drone.set_mode('GUIDED')
 
