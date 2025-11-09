@@ -23,6 +23,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-pip \
     python3-numpy \
     python3-numpy-dev \
+    xvfb \
+    libx11-xcb1 \
+    libxrender1 \
+    libxkbcommon-x11-0 \
+    libxcb-icccm4 \
+    libxcb-image0 \
+    libxcb-keysyms1 \
+    libxcb-randr0 \
+    libxcb-render-util0 \
+    libxcb-shape0 \
+    libxcb-shm0 \
+    libxcb-sync1 \
+    libxcb-xfixes0 \
+    libxcb-xinerama0 \
+    libxcb-xkb1 \
     && python3 -m pip install --upgrade pip \
     && rm -rf /var/lib/apt/lists/*
 
@@ -70,6 +85,7 @@ RUN python3 -m pip install fastapi uvicorn[standard]
 RUN /opt/ros/humble/lib/mavros/install_geographiclib_datasets.sh
 RUN pip install --no-cache-dir matplotlib
 RUN pip install --no-cache-dir pandas
+RUN pip install --no-cache-dir PyQt5
 
 # put this very last so earlier layers stay cached
 ARG ZENMAV_REFRESH=0

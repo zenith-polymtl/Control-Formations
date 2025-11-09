@@ -4,7 +4,7 @@ package_name = 'mission_control'
 
 setup(
     name=package_name,
-    version='0.0.0',
+    version='1.0.0',
     packages=find_packages(exclude=['test']),
     data_files=[
         ('share/ament_index/resource_index/packages',
@@ -14,10 +14,10 @@ setup(
     install_requires=['setuptools',
                       'tf_transformations'],
     zip_safe=True,
-    maintainer='root',
-    maintainer_email='root@todo.todo',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    maintainer='Colin Rousseau',
+    maintainer_email='colin.rousseau@etud.polymtl.ca',
+    description='Répertoire des fichiers qui concerne la génération du ballon à suivre',
+    license='Apache 2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [

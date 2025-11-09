@@ -13,6 +13,8 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='colin',
+    maintainer='Colin Rousseau',
+    maintainer_email='colin.rousseau@etud.polymtl.ca',
+    license='Apache 2.0',
     description='bringup',
 )
