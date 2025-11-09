@@ -22,7 +22,9 @@ setup(
     entry_points={
         'console_scripts': [
             'balloon = mission_control.ballon_pub:main',
-            'monitor = mission_control.monitor:main'
+            'monitor = mission_control.monitor:main',
+            'sabonner_au_ballon = mission_control.sabonner_au_ballon:main',
+            'suivi = mission_control.suivi_trajectoire_zenmav:main'
         ],
     },
 )
