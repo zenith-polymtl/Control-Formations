@@ -46,7 +46,7 @@ class solution(Node):
             self.get_parameter("takeoff_alt").get_parameter_value().double_value
         )
 
-        self.declare_parameter("look_ahead", 2.0)
+        self.declare_parameter("look_ahead", 5.0)
         self.look_ahead = (
             self.get_parameter("look_ahead").get_parameter_value().double_value
         )

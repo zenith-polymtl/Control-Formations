@@ -1,9 +1,12 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib
+
 
 file_path = "pose_distances.csv"  # <--- change to your actual path
 df = pd.read_csv(file_path)
+matplotlib.use("Qt5Agg")
 
 # ---- Build/normalize arrays ----
 def col(name):

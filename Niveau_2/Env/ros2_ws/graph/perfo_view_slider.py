@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider, Button
 import matplotlib
 
-matplotlib.use("TkAgg")  # ou "Qt5Agg" si Qt est installé
+#matplotlib.use("TkAgg")  # ou "Qt5Agg" si Qt est installé
+matplotlib.use("Qt5Agg")
 
 # ========= Load CSV =========
 file_path = "pose_distances.csv"  # <-- change to your actual path
@@ -63,6 +64,7 @@ N = min(len(p1x), len(p1y), len(p1z), len(p2x), len(p2y), len(p2z), len(t_vals))
 # ========= Figure & 3D axes =========
 fig = plt.figure(figsize=(10, 8))
 ax = fig.add_subplot(111, projection="3d")
+
 
 # Full (static) trajectories
 (line1,) = ax.plot(p1x[:N], p1y[:N], p1z[:N], label="pose1 path", linewidth=1.0)
