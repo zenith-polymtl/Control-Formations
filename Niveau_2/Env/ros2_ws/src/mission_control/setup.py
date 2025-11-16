@@ -23,7 +23,7 @@ setup(
         'console_scripts': [
             'balloon = mission_control.ballon_pub:main',
             'monitor = mission_control.monitor:main',
-            'suivi = mission_control.suivi_trajectoire_zenmav:main'
+            'suivi = mission_control.suivi:main'
         ],
     },
 )
