@@ -1,19 +1,45 @@
-services: #Todo : ajouter courte explication de chaque ligne et son meaning
-  payload:
+# Exemple de fichier Compose : un seul service, bâti à partir de
+# docker/dockerfile.example. Se lance depuis le dossier B2 avec :
+#   docker compose -f compose/example.yaml up -d
+services:
+  # Nom du service. C'est le nom qu'on passe aux commandes compose
+  # (docker compose up example, docker compose logs example) et le nom d'hôte
+  # du conteneur pour les autres services du même fichier.
+  example:
+
     build:
+
+      # Dossier envoyé au démon Docker comme contexte de build : c'est la racine
+      # de tout ce que le Dockerfile peut copier. Relatif à CE fichier, donc B2.
       context: ..
+
+      # Chemin du Dockerfile, relatif au contexte.
       dockerfile: docker/dockerfile.example
+
+    # Nom fixe du conteneur au lieu du nom généré (compose-example-1). Rend les
+    # commandes prévisibles : docker exec -it example bash
     container_name: example
+    # Le conteneur partage la pile réseau de la machine hôte : aucun port à
+    # rediriger, et la découverte DDS de ROS 2 fonctionne sans configuration.
     network_mode: host
-    tty: true 
+    # Alloue un pseudo-terminal, équivalent du -t de docker run.
+    tty: true
+    # Garde l'entrée standard ouverte, équivalent du -i. Les deux ensemble = -it
     stdin_open: true
     volumes:
-      - /example_ws:/example_ws
-    working_dir: /example_ws  
+      # Montage : le dossier de gauche (sur l'hôte, relatif à ce fichier) apparaît
+      # dans le conteneur au chemin de droite. Les modifications passent dans les
+      # deux sens et survivent à la suppression du conteneur.
+      - ../example_ws:/example_ws
+    # Dossier au démarrage du conteneur. Les chemins relatifs dans le CMD ou les scripts sont relatifs à ce dossier.
+    working_dir: /example_ws
 
-    command: ["bash","-lc","while :; do sleep 86400; done"]
+    # Remplace le CMD de l'image. Ici le conteneur ne fait rien et reste en vie,
+    # pour qu'on puisse entrer dedans quand on veut avec docker exec.
+    command: ["bash", "-lc", "while :; do sleep 86400; done"]
 
-    environment: # Réseautique et DDS, important, mais à comprendre dans une autre formation  
+    # Réseautique et DDS : important, mais couvert dans une autre formation.
+    environment:
       - ROS_DOMAIN_ID=2
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
       - ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST

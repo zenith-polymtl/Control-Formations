@@ -1,0 +1,11 @@
+FROM python:3.11-slim
+
+# Dossier de travail dans l'image
+WORKDIR /app
+
+# Copie du contenu du dossier courant vers /app dans l'image, pas très bonne pratique de prototype, mais ça va pour un exemple simple.
+# Dans un vrai projet, on préfère mounter le code dans le conteneur avec un volume, pour ne pas avoir à reconstruire l'image à chaque modification du code.    
+COPY . .
+
+# Commande lancée par défaut au démarrage d'un conteneur
+CMD ["python3", "app.py"]
