@@ -1,0 +1,19 @@
+services: #Todo : ajouter courte explication de chaque ligne et son meaning
+  payload:
+    build:
+      context: ..
+      dockerfile: docker/dockerfile.example
+    container_name: example
+    network_mode: host
+    tty: true 
+    stdin_open: true
+    volumes:
+      - /example_ws:/example_ws
+    working_dir: /example_ws  
+
+    command: ["bash","-lc","while :; do sleep 86400; done"]
+
+    environment: # Réseautique et DDS, important, mais à comprendre dans une autre formation  
+      - ROS_DOMAIN_ID=2
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
