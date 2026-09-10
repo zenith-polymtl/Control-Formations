@@ -17,15 +17,13 @@ services:
       dockerfile: docker/dockerfile.example
 
     # Nom fixe du conteneur au lieu du nom généré (compose-example-1). Rend les
-  
+    # commandes prévisibles : docker exec -it example bash
     container_name: example
-
-    # Le conteneur partage le même réseau que l'hôte. Plus simple, moins sécure/privée (pas si grave dans Zenith)
+    # Le conteneur partage la pile réseau de la machine hôte : aucun port à
+    # rediriger, et la découverte DDS de ROS 2 fonctionne sans configuration.
     network_mode: host
-
     # Alloue un pseudo-terminal, équivalent du -t de docker run.
     tty: true
-    
     # Garde l'entrée standard ouverte, équivalent du -i. Les deux ensemble = -it
     stdin_open: true
     volumes:
@@ -41,7 +39,7 @@ services:
     command: ["bash", "-lc", "while :; do sleep 86400; done"]
 
     # Réseautique et DDS : important, mais couvert dans une autre formation.
-    environment: Réseautique et DDS : important, mais couvert dans une autre formation.
+    environment:
       - ROS_DOMAIN_ID=2
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
       - ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST

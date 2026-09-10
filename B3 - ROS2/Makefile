@@ -1,9 +1,13 @@
-# Makefile de la formation B2. C'est une version réduite du Makefile d'aeac-2026 :
-# mêmes variables, mêmes noms de cibles, mêmes idiomes, mais trois cibles au lieu
-# d'une cinquantaine. Se roule depuis le dossier B2.
+# Makefile de la formation B3. Même base que celui de B2 (mêmes variables, mêmes
+# cibles, mêmes idiomes), avec trois ajouts pour travailler avec ROS 2 : le
+# workspace est sourcé automatiquement, une cible pour ouvrir des terminaux de plus
+# et une cible de nettoyage. Se roule depuis le dossier B3.
 #
+#   make build          bâtit l'image (obligatoire une première fois en B3)
 #   make shell          conteneur + mavros en arrière-plan, puis un shell dedans
+#   make terminal       un terminal de plus dans le conteneur déjà démarré
 #   make listen-status  conteneur + mavros, puis l'écoute de /mavros/state
+#   make clean          efface build/, install/ et log/ du workspace
 #   make down           arrête et supprime le conteneur
 
 # ===== Variables =====
@@ -20,8 +24,11 @@ FCU_URL      := tcp://$(FCU_HOST):$(TCP_PORT)
 COMPOSE      := docker compose -f $(COMPOSE_FILE)
 
 # Rend ros2 utilisable : docker exec ne passe pas par l'entrypoint de l'image ROS,
-# donc rien n'est sourcé automatiquement. Le vrai dépôt fait exactement pareil.
-ROS_SETUP := source /opt/ros/humble/setup.bash
+# donc rien n'est sourcé automatiquement. Ajout B3 : si le workspace a déjà été
+# bâti avec colcon, ses packages sont sourcés aussi. Le vrai dépôt fait pareil
+# (source install/setup.bash dans sa cible shell).
+WS_SETUP  := /example_ws/install/setup.bash
+ROS_SETUP := source /opt/ros/humble/setup.bash; if [ -f $(WS_SETUP) ]; then source $(WS_SETUP); fi
 
 # Nettoyage partagé par les cibles interactives.
 CLEANUP := echo ">>> Nettoyage : arrêt du conteneur"; $(COMPOSE) down --remove-orphans
@@ -47,9 +54,22 @@ shell: up ## Ouvre un shell dans le conteneur, mavros déjà lancé
 	-$(COMPOSE) exec -it $(C) bash -lc '$(ROS_SETUP); exec bash -i'
 	@$(CLEANUP)
 
+# Ajout B3. Pas de dépendance à up (sinon un deuxième mavros serait lancé) et pas
+# de nettoyage en sortant (sinon fermer ce terminal couperait tous les autres).
+# Le conteneur doit donc déjà rouler : make shell d'abord, dans un autre terminal.
+# Le - évite que make affiche une erreur en sortant après un Ctrl-C.
+terminal: ## Ouvre un terminal de plus dans le conteneur démarré par make shell
+	-$(COMPOSE) exec -it $(C) bash -lc '$(ROS_SETUP); exec bash -i'
+
 listen-status: up ## Affiche /mavros/state jusqu'à Ctrl-C
 	-$(COMPOSE) exec -it $(C) bash -lc '$(ROS_SETUP); ros2 topic echo /mavros/state'
 	@$(CLEANUP)
 
+# Ajout B3. Roule sur l'hôte : les fichiers bâtis appartiennent à votre utilisateur
+# (même UID que dev dans le conteneur), pas besoin de sudo. Les sources de src/
+# ne sont pas touchées.
+clean: ## Efface build/, install/ et log/ du workspace
+	rm -rf example_ws/build example_ws/install example_ws/log
+
 # Cibles qui ne produisent aucun fichier portant leur nom.
-.PHONY: build up down shell listen-status
+.PHONY: build up down shell terminal listen-status clean

@@ -1,1 +1,1 @@
-print("Hello world depuis le conteneur")
+print("Hello depuis le conteneur")
