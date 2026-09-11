@@ -1,10 +1,10 @@
 # Plan d'apprentissage — Le contrôle de A à Z
 
-*Version du 31 août 2026. Structure du parcours de formation (wiki Notion Zenith) alignée sur les objectifs spécifiques du positionnement initial ING8000B, corrigée suite à l'audit du dépôt `aeac-2026` et de ses 8 submodules (voir `carte-connaissances-aeac-2026.md`). Les ajouts issus de l'audit sont marqués **🔧 Correctif n**.*
+*Version du 31 août 2026, mise à jour le 10 septembre 2026 (support : ce dépôt GitHub, avec une page d'accueil sur le Notion de Zenith ; B0 rédigé ; B3 en quatre documents). Structure du parcours de formation alignée sur les objectifs spécifiques du positionnement initial ING8000B, corrigée suite à l'audit du dépôt `aeac-2026` et de ses 8 submodules (voir `carte-connaissances-aeac-2026.md`). Les ajouts issus de l'audit sont marqués **🔧 Correctif n**.*
 
 ## Architecture du parcours
 
-Chaque bloc correspond à une ou plusieurs pages du wiki. Un bloc suppose les précédents acquis, sauf les branches parallèles. Les correctifs sont positionnés à l'endroit exact où ils s'insèrent dans la progression.
+Chaque bloc correspond à un ou plusieurs documents du dépôt. Un bloc suppose les précédents acquis, sauf les branches parallèles. Les correctifs sont positionnés à l'endroit exact où ils s'insèrent dans la progression.
 
 ```
 B0 Prérequis 🔧5
@@ -38,7 +38,7 @@ B3 ROS 2 Humble 🔧1 ────────────────── rat
 
 ## B0 — Prérequis d'entrée **🔧 Correctif 5**
 
-**Position** : page d'accueil du wiki, lue avant l'introduction de l'objectif 2. Aucun contenu maison : liste de vérification + liens curés vers des ressources externes. Vise à éviter la « pente trop raide » observée dans la formation 1.
+**Position** : `B0/B0.md`, lu avant B1. Contenu maison court (une heure) : autodiagnostic, terminal, Git, Python orienté objet, réseau, plus des liens curés. Vise à éviter la « pente trop raide » observée dans la formation 1.
 
 - Terminal Linux/bash : navigation, permissions (`chmod`/`chown`), utilisateurs, variables d'environnement.
 - Git de base : clone, branch, commit, push (les submodules attendent au B6).
@@ -63,7 +63,7 @@ Contenu tel que défini : WSL2 + Ubuntu 22.04 (obligatoire — pas 24.04 ; pièg
 
 ## B3 — ROS 2 Humble **🔧 Correctif 1 — le trou principal**
 
-**Position** : nouveau bloc entre l'objectif 3 et l'objectif 4, rattaché administrativement à l'**objectif 4** (prérequis direct de `make mavros-sim`). Format économe en charge : **page-carte de curation**, pas un guide maison — les tutoriels officiels ROS 2 Humble sont excellents ; la valeur ajoutée Zenith est le tri et l'exercice.
+**Position** : nouveau bloc entre l'objectif 3 et l'objectif 4, rattaché administrativement à l'**objectif 4** (prérequis direct de `make mavros-sim`). Format retenu après rédaction : **quatre documents maison** (B3.1 à B3.4, adaptés du tutoriel MOGI-ROS et ramenés à Humble, au conteneur de B2 et aux drones), environ 7 h pour la recrue, avec un projet final de contrôle au clavier via mavros.
 
 - Parcours curé dans les tutoriels officiels : nœuds, topics, services, paramètres, launch, rclpy.
 - colcon et structure de package : ament_python vs ament_cmake (`custom_interfaces` comme exemple réel).
@@ -73,7 +73,7 @@ Contenu tel que défini : WSL2 + Ubuntu 22.04 (obligatoire — pas 24.04 ; pièg
 - **Exercice maison** : créer un package rclpy, un node publisher/subscriber, un msg custom dans un clone de `custom_interfaces`, le linker dans un workspace mission.
 
 **Validation** : l'exercice complété seul, dans le conteneur `dev`.
-**Charge ajoutée** : ~4 h (curation + exercice), imputée à l'objectif 4 (16 h estimées, marge disponible car les scripts Docker existent déjà en partie).
+**Charge ajoutée** : la rédaction a dépassé les 4 h prévues (guide maison plutôt que curation) ; la durée pour la recrue est d'environ 7 h, à mesurer avec la première cohorte.
 
 ## B4 — Simulation avancée — **Objectif 4** (31 oct) **🔧 Correctif 2**
 
@@ -143,4 +143,4 @@ Contenu tel que défini : PID, filtres, configurations, failsafes, démarche gé
 
 **Charge totale : 68 h → ~82,5 h.** Reste sous les 90 h du plan de cours, mais dépasse la mise en garde « ne t'en mets pas trop ». Si arbitrage nécessaire, l'ordre de sacrifice inverse la valeur : 🔧5/🔧6 (quasi gratuits) et 🔧2 (s'appuie sur l'existant) sont non négociables ; 🔧1 peut se réduire à la curation sans exercice (−2 h) ; 🔧3 peut se limiter à la vue d'ensemble + runbook en reportant les sous-pages par submodule (−3 h) — mais c'est le savoir qui disparaît en avril, donc à ne couper qu'en dernier.
 
-**Jalons inchangés** : les dates des 7 objectifs restent celles du positionnement ; les correctifs s'insèrent dans les guides existants plutôt que de créer de nouveaux livrables, sauf B3 (page-carte) et B5 (pages architecture) qui deviennent des sous-livrables des objectifs 4 et 5. La carte publiée sur Notion (objectif 1, 18 sept) affiche l'architecture ci-dessus, correctifs inclus, pour validation par Haithem Tebib et Nour Karoui.
+**Jalons inchangés** : les dates des 7 objectifs restent celles du positionnement ; les correctifs s'insèrent dans les guides existants plutôt que de créer de nouveaux livrables, sauf B3 (quatre documents) et B5 (pages architecture) qui deviennent des sous-livrables des objectifs 4 et 5. La carte publiée sur Notion (objectif 1, 18 sept) affiche l'architecture ci-dessus, correctifs inclus, pour validation par Haithem Tebib et Nour Karoui.

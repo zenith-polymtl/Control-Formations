@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Solution du bonus B3.3 : contrôle au clavier avec détection de perte de communication.
+Solution du bonus B3.4 : contrôle au clavier avec détection de perte de communication.
 
 Différence avec keyboard_control.py : la callback ne commande plus le drone, elle
 mémorise la commande et l'heure du message. Un timer plus rapide que le signal
@@ -10,8 +10,8 @@ perdu et le drone s'arrête sur place.
 
 Pour tester : ros2 param set /teleop simulate_dropout true
 
-À copier dans example_ws/src/b3_py/b3_py/, avec dans setup.py :
-    'py_keyboard_control_safe = b3_py.keyboard_control_safe:main'
+À copier dans example_ws/src/b3_python_nodes/b3_python_nodes/, avec dans setup.py :
+    'py_keyboard_control_safe = b3_python_nodes.keyboard_control_safe:main'
 """
 
 import rclpy
@@ -76,8 +76,8 @@ class KeyboardControlSafe(Node):
         self.command = mapping.get(key, (0.0, 0.0, 0.0, 0.0))
 
     def timer_callback(self):
-        # Pas encore de premier message : la téléop attend la fin du décollage,
-        # et une commande maintenant interromprait la montée.
+        # Pas encore de premier message : la téléop n'est pas démarrée, on ne
+        # commande rien.
         if self.time_last_message is None:
             return
 

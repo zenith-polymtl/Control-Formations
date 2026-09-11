@@ -15,7 +15,7 @@ setup(
     zip_safe=True,
     maintainer='colin',
     maintainer_email='colinc131@gmail.com',
-    description='Nodes fournies pour la formation B3.3 : téléop clavier et décollage automatique',
+    description='Nodes fournies pour la formation B3 : téléop clavier et décollage automatique',
     license='Apache-2.0',
     entry_points={
         'console_scripts': [

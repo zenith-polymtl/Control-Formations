@@ -1,0 +1,7 @@
+# Fichiers que Docker n'a pas besoin de recevoir au build : le Dockerfile ne
+# copie que b3_tools_ws/src. Sans cette liste, tout le dossier de B3, workspace
+# bâti compris, serait envoyé au démon Docker à chaque make build.
+example_ws
+b3_tools_ws/build
+b3_tools_ws/install
+b3_tools_ws/log
