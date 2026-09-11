@@ -1,15 +1,19 @@
 # Makefile de la formation B2. C'est une version réduite du Makefile d'aeac-2026 :
-# mêmes variables, mêmes noms de cibles, mêmes idiomes, mais trois cibles au lieu
+# mêmes variables, mêmes noms de cibles, mêmes idiomes, mais sept cibles au lieu
 # d'une cinquantaine. Se roule depuis le dossier B2.
 #
-#   make shell          conteneur + mavros en arrière-plan, puis un shell dedans
-#   make listen-status  conteneur + mavros, puis l'écoute de /mavros/state
-#   make down           arrête et supprime le conteneur
+#   make build          bâtit l'image
+#   make shell          démarre le conteneur de travail s'il ne roule pas, puis un shell dedans
+#   make mavros         démarre mavros dans son propre conteneur, branché sur la simulation
+#   make mavros-logs    suit les logs de mavros (la ligne « Got HEARTBEAT » confirme la connexion)
+#   make listen-status  mavros + affichage de /mavros/state
+#   make down           arrête et supprime les conteneurs
 
 # ===== Variables =====
 # ?= n'affecte que si la variable n'est pas déjà définie : les valeurs ci-dessous
 # sont donc des défauts, surchargeables sur la ligne de commande.
-#   make listen-status TCP_PORT=5763
+#   make mavros TCP_PORT=5763
+#   make mavros FCU_HOST=172.20.16.1      (WSL sans mode Mirrored)
 C        ?= example
 TCP_PORT ?= 5762
 FCU_HOST ?= 127.0.0.1
@@ -23,33 +27,37 @@ COMPOSE      := docker compose -f $(COMPOSE_FILE)
 # donc rien n'est sourcé automatiquement. Le vrai dépôt fait exactement pareil.
 ROS_SETUP := source /opt/ros/humble/setup.bash
 
-# Nettoyage partagé par les cibles interactives.
-CLEANUP := echo ">>> Nettoyage : arrêt du conteneur"; $(COMPOSE) down --remove-orphans
-
 # ===== Cycle de vie =====
 build: ## Bâtit l'image
 	$(COMPOSE) build
 
-up: ## Démarre le conteneur en arrière-plan et lance mavros dedans
+# docker compose up -d ne fait rien si le conteneur roule déjà : la cible est
+# répétable, et toutes les cibles qui en dépendent aussi.
+up: ## Démarre le conteneur de travail en arrière-plan
 	@mkdir -p example_ws
-	$(COMPOSE) up -d
-	$(COMPOSE) exec -d $(C) bash -lc '$(ROS_SETUP); ros2 launch mavros apm.launch fcu_url:=$(FCU_URL) fcu_protocol:=v2.0'
-	@echo ">>> mavros roule dans le conteneur, branché sur $(FCU_URL)"
+	$(COMPOSE) up -d $(C)
 
-down: ## Arrête et supprime le conteneur
-	@$(CLEANUP)
+# mavros a son propre service dans le fichier Compose, donc son propre conteneur.
+# FCU_URL passe par l'environnement : le fichier Compose l'insère dans la commande.
+mavros: ## Démarre mavros dans son conteneur, branché sur la simulation
+	FCU_URL=$(FCU_URL) $(COMPOSE) up -d mavros
+	@echo ">>> mavros roule, branché sur $(FCU_URL). Ses logs : make mavros-logs"
+
+mavros-logs: ## Suit les logs de mavros jusqu'à Ctrl-C
+	-$(COMPOSE) logs -f mavros
+
+down: ## Arrête et supprime les conteneurs
+	$(COMPOSE) down --remove-orphans
 
 # ===== Cibles de travail =====
-# Le - devant une commande dit à make de continuer même si elle sort en erreur,
-# ce qui arrive quand on quitte avec Ctrl-C. La ligne de nettoyage roule quand
-# même. Si make s'arrête avant, `make down` reste le filet de sécurité.
-shell: up ## Ouvre un shell dans le conteneur, mavros déjà lancé
+# Le - devant une commande dit à make de continuer sans afficher d'erreur quand
+# elle sort en erreur, ce qui arrive quand on quitte avec Ctrl-C ou exit.
+# Rien n'est arrêté en sortant : make down s'en charge, en fin de séance.
+shell: up ## Ouvre un shell dans le conteneur, ROS 2 sourcé (autant de fois qu'on veut)
 	-$(COMPOSE) exec -it $(C) bash -lc '$(ROS_SETUP); exec bash -i'
-	@$(CLEANUP)
 
-listen-status: up ## Affiche /mavros/state jusqu'à Ctrl-C
+listen-status: up mavros ## Affiche /mavros/state jusqu'à Ctrl-C
 	-$(COMPOSE) exec -it $(C) bash -lc '$(ROS_SETUP); ros2 topic echo /mavros/state'
-	@$(CLEANUP)
 
 # Cibles qui ne produisent aucun fichier portant leur nom.
-.PHONY: build up down shell listen-status
+.PHONY: build up mavros mavros-logs down shell listen-status

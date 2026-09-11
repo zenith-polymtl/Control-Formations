@@ -1,8 +1,10 @@
-# Fichier Compose de la formation B3 : le même service que B2, bâti à partir de
-# docker/dockerfile.example. Se lance depuis le dossier B3, normalement par le Makefile :
-#   make shell
+# Fichier Compose de la formation B3 : les deux mêmes services que B2, bâtis à
+# partir de docker/dockerfile.example. Se lance depuis le dossier B3, normalement
+# par le Makefile :
+#   make shell      (conteneur de travail)
+#   make mavros     (mavros, seulement en B3.3)
 # ou à la main :
-#   docker compose -f compose/example.yaml up -d
+#   docker compose -f compose/example.yaml up -d example
 
 # Nom du projet Compose. Sans lui, Compose prend le nom du dossier qui contient ce
 # fichier (compose), le même qu'en B2 : les deux formations partageraient alors le
@@ -23,6 +25,9 @@ services:
 
       # Chemin du Dockerfile, relatif au contexte.
       dockerfile: docker/dockerfile.example
+
+    # Nom fixe de l'image, partagé avec le service mavros : bâtie une seule fois.
+    image: b3-example
 
     # Nom fixe du conteneur au lieu du nom généré (b3-example-1). Rend les
     # commandes prévisibles : docker exec -it b3-example bash
@@ -67,3 +72,20 @@ services:
       - DISPLAY=${DISPLAY:-:0}
       # Évite un bogue d'affichage courant des applications Qt (rqt) en conteneur.
       - QT_X11_NO_MITSHM=1
+
+  # mavros, seul dans son conteneur, comme en B2 et comme compose/mavros.yml
+  # d'aeac-2026. Ne sert qu'à partir de B3.3 : make mavros.
+  mavros:
+    build:
+      context: ..
+      dockerfile: docker/dockerfile.example
+    image: b3-example
+    container_name: b3-mavros
+    network_mode: host
+    environment:
+      - ROS_DOMAIN_ID=2
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
+    # FCU_URL vient de l'environnement du terminal qui lance compose (le Makefile
+    # la remplit), avec la simulation locale comme valeur par défaut.
+    command: ["bash", "-lc", "source /opt/ros/humble/setup.bash && ros2 launch mavros apm.launch fcu_url:=${FCU_URL:-tcp://127.0.0.1:5762} fcu_protocol:=v2.0"]

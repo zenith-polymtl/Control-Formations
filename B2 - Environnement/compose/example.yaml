@@ -1,6 +1,15 @@
-# Exemple de fichier Compose : un seul service, bâti à partir de
-# docker/dockerfile.example. Se lance depuis le dossier B2 avec :
-#   docker compose -f compose/example.yaml up -d
+# Fichier Compose de la formation B2 : deux services bâtis sur la même image.
+#   example   le conteneur de travail, qui dort en attendant qu'on entre dedans
+#   mavros    mavros branché sur la simulation, dans son propre conteneur
+# Se lance depuis le dossier B2, normalement par le Makefile (make shell, make mavros),
+# ou à la main :
+#   docker compose -f compose/example.yaml up -d example
+#   docker compose -f compose/example.yaml up -d mavros
+
+# Nom du projet Compose. Sans lui, Compose prend le nom du dossier qui contient ce
+# fichier (compose). Il préfixe le nom de l'image et des conteneurs.
+name: b2
+
 services:
   # Nom du service. C'est le nom qu'on passe aux commandes compose
   # (docker compose up example, docker compose logs example) et le nom d'hôte
@@ -16,22 +25,32 @@ services:
       # Chemin du Dockerfile, relatif au contexte.
       dockerfile: docker/dockerfile.example
 
-    # Nom fixe du conteneur au lieu du nom généré (compose-example-1). Rend les
+    # Nom fixe de l'image bâtie. Le service mavros réutilise la même image :
+    # une seule image sur le disque, bâtie une seule fois.
+    image: b2-example
+
+    # Nom fixe du conteneur au lieu du nom généré (b2-example-1). Rend les
     # commandes prévisibles : docker exec -it example bash
     container_name: example
+
     # Le conteneur partage la pile réseau de la machine hôte : aucun port à
     # rediriger, et la découverte DDS de ROS 2 fonctionne sans configuration.
     network_mode: host
+
     # Alloue un pseudo-terminal, équivalent du -t de docker run.
     tty: true
+
     # Garde l'entrée standard ouverte, équivalent du -i. Les deux ensemble = -it
     stdin_open: true
+
     volumes:
       # Montage : le dossier de gauche (sur l'hôte, relatif à ce fichier) apparaît
       # dans le conteneur au chemin de droite. Les modifications passent dans les
       # deux sens et survivent à la suppression du conteneur.
       - ../example_ws:/example_ws
-    # Dossier au démarrage du conteneur. Les chemins relatifs dans le CMD ou les scripts sont relatifs à ce dossier.
+
+    # Dossier au démarrage du conteneur. Les chemins relatifs dans le CMD ou les
+    # scripts sont relatifs à ce dossier.
     working_dir: /example_ws
 
     # Remplace le CMD de l'image. Ici le conteneur ne fait rien et reste en vie,
@@ -43,3 +62,32 @@ services:
       - ROS_DOMAIN_ID=2
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
       - ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
+
+  # Deuxième service : mavros, seul dans son conteneur, comme compose/mavros.yml
+  # du dépôt aeac-2026. Un processus par conteneur : on le démarre, on lit ses
+  # logs, on l'arrête, sans jamais toucher au conteneur de travail.
+  mavros:
+
+    # Même recette et même nom d'image que le service example : Compose ne bâtit
+    # qu'une fois.
+    build:
+      context: ..
+      dockerfile: docker/dockerfile.example
+    image: b2-example
+
+    container_name: mavros
+
+    # Sur le même réseau hôte que example : les deux se voient sur localhost, et
+    # mavros joint la simulation de Mission Planner à l'adresse de FCU_URL.
+    network_mode: host
+
+    # Même réglage DDS que example, sinon les deux conteneurs ne se verraient pas.
+    environment:
+      - ROS_DOMAIN_ID=2
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
+
+    # La commande du conteneur : sourcer ROS 2, puis lancer mavros. FCU_URL vient
+    # de l'environnement du terminal qui lance compose (le Makefile la remplit),
+    # avec la simulation locale comme valeur par défaut.
+    command: ["bash", "-lc", "source /opt/ros/humble/setup.bash && ros2 launch mavros apm.launch fcu_url:=${FCU_URL:-tcp://127.0.0.1:5762} fcu_protocol:=v2.0"]
