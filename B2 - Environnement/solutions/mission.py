@@ -10,7 +10,7 @@ Mission Planner démarrée :
 
 Le port 5763 est le deuxième port TCP du SITL ; le 5762 est pris par mavros
 quand il roule (make mavros). Si WSL n'est pas en mode Mirrored, remplacer
-127.0.0.1 par l'adresse de Windows vue de WSL (B2 section 2.7, étape 2).
+127.0.0.1 par l'adresse de Windows vue de WSL (B2 section 1.5).
 
 Simulation seulement : sur un vrai drone, c'est le pilote qui arme (B1 section 3.3).
 """
