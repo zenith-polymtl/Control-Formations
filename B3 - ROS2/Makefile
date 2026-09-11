@@ -53,6 +53,12 @@ mavros-logs: ## Suit les logs de mavros jusqu'à Ctrl-C
 down: ## Arrête et supprime les conteneurs
 	$(COMPOSE) down --remove-orphans
 
+# Mac, expérimental : le SITL ArduPilot dans un conteneur, à la place de la
+# simulation de Mission Planner (ANNEXE-SITL-DOCKER.md à la racine du dépôt).
+# Fichier Compose à part, même projet : make down l'arrête aussi.
+sitl: ## SITL ArduPilot dans un conteneur (Mac, expérimental)
+	docker compose -f compose/sitl.yaml up -d
+
 # ===== Cibles de travail =====
 # Le - devant une commande dit à make de continuer sans afficher d'erreur quand
 # elle sort en erreur, ce qui arrive quand on quitte avec Ctrl-C ou exit.
@@ -70,4 +76,4 @@ clean: ## Efface build/, install/ et log/ du workspace
 	rm -rf example_ws/build example_ws/install example_ws/log
 
 # Cibles qui ne produisent aucun fichier portant leur nom.
-.PHONY: build up mavros mavros-logs down shell listen-status clean
+.PHONY: build up mavros mavros-logs down sitl shell listen-status clean

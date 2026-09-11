@@ -1,0 +1,19 @@
+# SITL ArduPilot dans un conteneur, pour qui n'a pas Mission Planner (Mac).
+# EXPÉRIMENTAL : voir ANNEXE-SITL-DOCKER.md à la racine du dépôt.
+#   make sitl
+# Même nom de projet que compose/example.yaml : make down (avec --remove-orphans)
+# arrête aussi ce conteneur.
+name: b2
+
+services:
+  sitl:
+    build:
+      # Le Dockerfile est partagé par B2 et B3, à la racine du dépôt.
+      context: ../../sitl
+    image: sitl-ardupilot
+    container_name: sitl
+    # Réseau hôte, comme les autres services : mavros et Zenmav joignent le SITL
+    # sur 127.0.0.1:5762 et 5763.
+    network_mode: host
+    tty: true
+    stdin_open: true

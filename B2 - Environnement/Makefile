@@ -1,5 +1,5 @@
 # Makefile de la formation B2. C'est une version réduite du Makefile d'aeac-2026 :
-# mêmes variables, mêmes noms de cibles, mêmes idiomes, mais sept cibles au lieu
+# mêmes variables, mêmes noms de cibles, mêmes idiomes, mais une poignée de cibles au lieu
 # d'une cinquantaine. Se roule depuis le dossier B2.
 #
 #   make build          bâtit l'image
@@ -49,6 +49,12 @@ mavros-logs: ## Suit les logs de mavros jusqu'à Ctrl-C
 down: ## Arrête et supprime les conteneurs
 	$(COMPOSE) down --remove-orphans
 
+# Mac, expérimental : le SITL ArduPilot dans un conteneur, à la place de la
+# simulation de Mission Planner (ANNEXE-SITL-DOCKER.md à la racine du dépôt).
+# Fichier Compose à part, même projet : make down l'arrête aussi.
+sitl: ## SITL ArduPilot dans un conteneur (Mac, expérimental)
+	docker compose -f compose/sitl.yaml up -d
+
 # ===== Cibles de travail =====
 # Le - devant une commande dit à make de continuer sans afficher d'erreur quand
 # elle sort en erreur, ce qui arrive quand on quitte avec Ctrl-C ou exit.
@@ -60,4 +66,4 @@ listen-status: up mavros ## Affiche /mavros/state jusqu'à Ctrl-C
 	-$(COMPOSE) exec -it $(C) bash -lc '$(ROS_SETUP); ros2 topic echo /mavros/state'
 
 # Cibles qui ne produisent aucun fichier portant leur nom.
-.PHONY: build up mavros mavros-logs down shell listen-status
+.PHONY: build up mavros mavros-logs down sitl shell listen-status

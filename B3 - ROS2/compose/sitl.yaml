@@ -1,0 +1,16 @@
+# SITL ArduPilot dans un conteneur, pour qui n'a pas Mission Planner (Mac).
+# EXPÉRIMENTAL : voir ANNEXE-SITL-DOCKER.md à la racine du dépôt.
+#   make sitl
+# Même nom de projet que compose/example.yaml : make down (avec --remove-orphans)
+# arrête aussi ce conteneur. Même image que celle de B2.
+name: b3
+
+services:
+  sitl:
+    build:
+      context: ../../sitl
+    image: sitl-ardupilot
+    container_name: b3-sitl
+    network_mode: host
+    tty: true
+    stdin_open: true
