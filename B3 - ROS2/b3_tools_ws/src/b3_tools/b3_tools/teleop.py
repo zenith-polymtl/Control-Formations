@@ -1,22 +1,18 @@
 #!/usr/bin/env python3
 """
-Téléop clavier de la formation B3.3 (node fournie).
+Téléop clavier de la formation B3 (node fournie).
 
 Lit les touches w a s d q e r f dans le terminal et publie, à fréquence fixe
 (2 Hz par défaut), la touche active sur un topic std_msgs/String. Une touche
 reste active tant qu'on la maintient enfoncée ; sans touche, le message contient
-une chaîne vide.
+une chaîne vide. La publication commence dès le démarrage.
 
 La node ne donne aucun sens aux touches : traduire une touche en mouvement du
-drone est le travail de la node de contrôle écrite en B3.3.
-
-Par défaut, rien n'est publié avant la fin du décollage (topic
-/b3/takeoff/completed, publié par la node takeoff) : en GUIDED, une commande de
-mouvement reçue pendant la montée remplacerait le décollage.
+drone est le travail de la node de contrôle écrite en B3.
 
 Le paramètre simulate_dropout coupe la publication de 5 à 10 s toutes les 30 s,
-pour le bonus de B3.3 (perte de communication). Il est relu à chaque période,
-donc il se change pendant que la node roule :
+pour le bonus perte de communication. Il est relu à chaque période, donc il se
+change pendant que la node roule :
     ros2 param set /teleop simulate_dropout true
 
 Le clavier est lu dans le terminal où la node a été lancée (/dev/tty), avec
@@ -35,14 +31,13 @@ import tty
 
 import rclpy
 from rclpy.node import Node
-from rclpy.qos import QoSProfile, QoSDurabilityPolicy, QoSHistoryPolicy, QoSReliabilityPolicy
-from std_msgs.msg import Bool, String
+from std_msgs.msg import String
 
 KEYS = 'wasdqerf'
 
 HELP = """
 ---------------------------------------------
- Téléop clavier B3.3
+ Téléop clavier B3
 ---------------------------------------------
  Touches : w a s d q e r f
  Maintenir une touche pour la garder active.
@@ -58,16 +53,10 @@ class Teleop(Node):
 
         self.set_up_parameters()
         self.define_initial_state()
-        self.set_up_topics()
+        self.key_pub = self.create_publisher(String, self.topic_name, 10)
 
         self.timer = self.create_timer(1.0 / self.rate, self.timer_callback)
-
         self.get_logger().info(f"Téléop démarrée : touches publiées à {self.rate} Hz sur {self.topic_name}")
-        if not self.takeoff_done:
-            self.get_logger().info(
-                f"En attente de la fin du décollage ({self.takeoff_topic}). "
-                "La node takeoff doit rouler : elle décolle dès que le GPS est prêt. "
-                "Pour publier tout de suite : --ros-args -p wait_takeoff:=false")
 
     # ------------------------------------------------------------------
     # Paramètres et état
@@ -76,8 +65,6 @@ class Teleop(Node):
         self.declare_parameter('topic_name', '/b3/teleop/key')
         self.declare_parameter('rate', 2.0)                 # Hz
         self.declare_parameter('hold_timeout', 0.8)         # s sans répétition avant de considérer la touche relâchée
-        self.declare_parameter('wait_takeoff', True)
-        self.declare_parameter('takeoff_topic', '/b3/takeoff/completed')
         self.declare_parameter('simulate_dropout', False)   # relu à chaque période
         self.declare_parameter('dropout_period', 30.0)      # s entre deux coupures
         self.declare_parameter('dropout_min', 5.0)          # durée minimale d'une coupure (s)
@@ -86,42 +73,16 @@ class Teleop(Node):
         self.topic_name = self.get_parameter('topic_name').value
         self.rate = self.get_parameter('rate').value
         self.hold_timeout = self.get_parameter('hold_timeout').value
-        self.wait_takeoff = self.get_parameter('wait_takeoff').value
-        self.takeoff_topic = self.get_parameter('takeoff_topic').value
         self.dropout_period = self.get_parameter('dropout_period').value
         self.dropout_min = self.get_parameter('dropout_min').value
         self.dropout_max = self.get_parameter('dropout_max').value
 
     def define_initial_state(self):
-        self.takeoff_done = not self.wait_takeoff
         self.last_key = ''
         self.last_key_time = 0.0
         self.published_key = None
         self.next_dropout = None
         self.dropout_end = 0.0
-
-    # ------------------------------------------------------------------
-    # Topics
-    # ------------------------------------------------------------------
-    def set_up_topics(self):
-        self.key_pub = self.create_publisher(String, self.topic_name, 10)
-
-        # TRANSIENT_LOCAL : le dernier message publié est gardé et livré aux
-        # subscribers qui arrivent en retard. La téléop peut donc démarrer après
-        # la fin du décollage et l'apprendre quand même.
-        latched_qos = QoSProfile(
-            reliability=QoSReliabilityPolicy.RELIABLE,
-            durability=QoSDurabilityPolicy.TRANSIENT_LOCAL,
-            history=QoSHistoryPolicy.KEEP_LAST,
-            depth=1,
-        )
-        self.takeoff_sub = self.create_subscription(
-            Bool, self.takeoff_topic, self.takeoff_callback, latched_qos)
-
-    def takeoff_callback(self, msg: Bool):
-        if msg.data and not self.takeoff_done:
-            self.takeoff_done = True
-            self.get_logger().info("Décollage terminé : publication des touches.")
 
     # ------------------------------------------------------------------
     # Clavier (thread séparé : la lecture ne doit pas bloquer rclpy.spin)
@@ -148,7 +109,7 @@ class Teleop(Node):
         return ''
 
     # ------------------------------------------------------------------
-    # Simulation de coupure (bonus B3.3)
+    # Simulation de coupure (bonus)
     # ------------------------------------------------------------------
     def dropout_active(self):
         """Vrai pendant une coupure simulée."""
@@ -172,8 +133,6 @@ class Teleop(Node):
     # Publication
     # ------------------------------------------------------------------
     def timer_callback(self):
-        if not self.takeoff_done:
-            return
         if self.dropout_active():
             return
 

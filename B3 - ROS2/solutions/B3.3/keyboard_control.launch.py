@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Solution B3.3 : décollage automatique + téléop + contrôle clavier, d'une commande.
+Solution B3.3 : téléop + contrôle clavier, d'une commande. Drone déjà en vol
+(décollage à la main, section 4.1).
 
 À copier dans example_ws/src/b3_bringup/launch/, puis colcon build.
     ros2 launch b3_bringup keyboard_control.launch.py
@@ -15,15 +16,6 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     ld = LaunchDescription()
-
-    takeoff = Node(
-        package="b3_tools",
-        executable="takeoff",
-        name="takeoff",
-        parameters=[{
-            "takeoff_alt": 10.0,
-        }]
-    )
 
     # output="screen" : l'aide de la téléop (un print) s'affiche dans le terminal
     teleop = Node(
@@ -44,7 +36,6 @@ def generate_launch_description():
         }]
     )
 
-    ld.add_action(takeoff)
     ld.add_action(teleop)
     ld.add_action(keyboard_control)
     return ld

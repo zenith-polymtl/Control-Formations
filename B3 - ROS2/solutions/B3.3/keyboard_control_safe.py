@@ -76,8 +76,8 @@ class KeyboardControlSafe(Node):
         self.command = mapping.get(key, (0.0, 0.0, 0.0, 0.0))
 
     def timer_callback(self):
-        # Pas encore de premier message : la téléop attend la fin du décollage,
-        # et une commande maintenant interromprait la montée.
+        # Pas encore de premier message : la téléop n'est pas démarrée, on ne
+        # commande rien.
         if self.time_last_message is None:
             return
 
