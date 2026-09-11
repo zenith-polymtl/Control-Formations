@@ -1,19 +1,8 @@
-ROS2 et Mavros
+# B3 : ROS 2 et mavros
 
-- objectifs : 
-    - Apprendre les commandes CLI les plus courantes de ROS2:
-        - ros2 topic echo
-        - ros2 topic list
-        - ros2 topic ...
-        - Arbre des commandes
-    - comprendre comment créer des packages en python et c++
-    - comprendre comment créer une node en python et en c++
-    - Création d'une node ultra basic subscriber
-    - comprendre colcon build / comment effacer des packages
+Objectifs, par document :
 
-    - Comprendre comment faire une requête de position / de message
-    - Écrire une node ros2 en python de base qui commande des déplacements du drone
-
-    - montrer l'overview des commandes mavros
-
- 
+- **B3.1, premiers pas avec ROS 2** : commandes en ligne de commande (`ros2 node`, `ros2 topic`), workspace colcon, package Python, publisher et subscriber ; le même publisher en C++ en option.
+- **B3.2, launch, paramètres et services** : fichier launch dans un package `bringup`, paramètres lus et modifiés en cours d'exécution, service maison dans un package d'interfaces, serveur et client.
+- **B3.3, piloter le drone avec mavros** : topics et services qui comptent, QoS, décollage depuis le terminal, demande de messages à l'autopilote (`set_message_interval`).
+- **B3.4, projet** : une node qui transforme les touches du clavier en consignes de vitesse (`setpoint_raw/local`), fichier launch, cible Makefile, bonus perte de communication.
