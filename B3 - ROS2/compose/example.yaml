@@ -1,0 +1,69 @@
+# Fichier Compose de la formation B3 : le même service que B2, bâti à partir de
+# docker/dockerfile.example. Se lance depuis le dossier B3, normalement par le Makefile :
+#   make shell
+# ou à la main :
+#   docker compose -f compose/example.yaml up -d
+
+# Nom du projet Compose. Sans lui, Compose prend le nom du dossier qui contient ce
+# fichier (compose), le même qu'en B2 : les deux formations partageraient alors le
+# même nom d'image et le même conteneur, et l'une écraserait l'autre.
+name: b3
+
+services:
+  # Nom du service. C'est le nom qu'on passe aux commandes compose
+  # (docker compose up example, docker compose logs example) et le nom d'hôte
+  # du conteneur pour les autres services du même fichier.
+  example:
+
+    build:
+
+      # Dossier envoyé au démon Docker comme contexte de build : c'est la racine
+      # de tout ce que le Dockerfile peut copier. Relatif à CE fichier, donc B3.
+      context: ..
+
+      # Chemin du Dockerfile, relatif au contexte.
+      dockerfile: docker/dockerfile.example
+
+    # Nom fixe du conteneur au lieu du nom généré (b3-example-1). Rend les
+    # commandes prévisibles : docker exec -it b3-example bash
+    # Même convention que le vrai dépôt (aeac-$(C)).
+    container_name: b3-example
+
+    # Le conteneur partage le même réseau que l'hôte. Plus simple, moins sécure/privée (pas si grave dans Zenith)
+    network_mode: host
+
+    # Alloue un pseudo-terminal, équivalent du -t de docker run.
+    tty: true
+
+    # Garde l'entrée standard ouverte, équivalent du -i. Les deux ensemble = -it
+    stdin_open: true
+
+    volumes:
+      # Montage : le dossier de gauche (sur l'hôte, relatif à ce fichier) apparaît
+      # dans le conteneur au chemin de droite. Les modifications passent dans les
+      # deux sens et survivent à la suppression du conteneur.
+      - ../example_ws:/example_ws
+
+      # Socket X11 de WSLg : permet aux fenêtres graphiques lancées dans le
+      # conteneur (rqt_graph) de s'afficher sous Windows. Même montage que
+      # compose/dev.yml d'aeac-2026, qui s'en sert pour RViz.
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+
+    # Dossier au démarrage du conteneur. Les chemins relatifs dans le CMD ou les scripts sont relatifs à ce dossier.
+    working_dir: /example_ws
+
+    # Remplace le CMD de l'image. Ici le conteneur ne fait rien et reste en vie,
+    # pour qu'on puisse entrer dedans quand on veut avec docker exec.
+    command: ["bash", "-lc", "while :; do sleep 86400; done"]
+
+    environment:
+      # Réseautique et DDS : important, mais couvert dans une autre formation.
+      - ROS_DOMAIN_ID=2
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
+      # Écran sur lequel s'affichent les fenêtres graphiques. Compose reprend la
+      # valeur du terminal WSL qui lance la commande, et :0 (celui de WSLg) si
+      # elle n'est pas définie.
+      - DISPLAY=${DISPLAY:-:0}
+      # Évite un bogue d'affichage courant des applications Qt (rqt) en conteneur.
+      - QT_X11_NO_MITSHM=1

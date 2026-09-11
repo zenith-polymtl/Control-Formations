@@ -1,0 +1,70 @@
+# syntax=docker/dockerfile:1.6
+# Version de la syntaxe Dockerfile utilisée par BuildKit. Doit être la toute
+# première ligne du fichier, sinon elle est traitée comme un commentaire ordinaire.
+
+# Variable de build avec valeur par défaut. Déclarée avant le FROM, elle est
+# utilisable dans le FROM. Se change au build avec --build-arg ROS_DISTRO=jazzy
+ARG ROS_DISTRO=humble
+
+# Image de base : l'image ROS 2 officielle, variante "ros-base" (le coeur de ROS 2,
+# sans les outils graphiques). Tout ce qui suit part de cette image.
+# --platform=$TARGETPLATFORM : la même recette bâtit pour un portable x86 et pour
+# un Jetson arm64. BuildKit remplit la variable tout seul.
+FROM --platform=$TARGETPLATFORM ros:${ROS_DISTRO}-ros-base
+
+# Empêche apt de poser des questions interactives (fuseau horaire, clavier)
+# pendant le build, où personne n'est là pour répondre.
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Les RUN utilisent bash au lieu de sh, avec pipefail : si une commande au milieu
+# d'un pipe échoue, le build échoue au lieu de continuer sans rien dire.
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+# Un seul RUN = une seule couche. On met à jour, on installe et on efface le cache
+# apt dans la même instruction : effacé dans un RUN séparé, le cache resterait
+# quand même dans la couche précédente et l'image garderait le poids.
+# ${ROS_DISTRO} fonctionne encore ici parce que l'image ROS définit elle-même
+# cette variable d'environnement.
+RUN apt-get update && apt-get install -y \
+    ros-${ROS_DISTRO}-mavros \
+    ros-${ROS_DISTRO}-mavros-extras \
+    ros-${ROS_DISTRO}-mavlink \
+    ros-${ROS_DISTRO}-rmw-cyclonedds-cpp \
+    geographiclib-tools \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# mavros a besoin des données de géoïde pour convertir l'altitude GPS (mesurée par
+# rapport à l'ellipsoïde) en altitude au-dessus du niveau de la mer. Le script les
+# télécharge. Sans lui, mavros démarre puis meurt en réclamant GeographicLib.
+RUN /opt/ros/${ROS_DISTRO}/lib/mavros/install_geographiclib_datasets.sh
+
+# Librairies Python de l'équipe. --no-cache-dir : pip ne garde pas les archives
+# téléchargées dans l'image.
+RUN pip3 install --no-cache-dir \
+    zenmav \
+    numpy
+
+# Dossier de travail par défaut. Créé s'il n'existe pas, et c'est le dossier
+# courant pour les instructions suivantes comme pour le conteneur au démarrage.
+WORKDIR /example_ws
+
+# Identifiants de l'utilisateur créé plus bas. 1000 est l'UID du premier
+# utilisateur créé dans WSL, donc la valeur par défaut tombe juste presque
+# toujours. Sinon : --build-arg UID=$(id -u) --build-arg GID=$(id -g)
+ARG UID=1000
+ARG GID=1000
+
+# Un utilisateur non root qui porte VOTRE UID. C'est ce qui fait que les fichiers
+# créés par le conteneur dans un volume monté vous appartiennent au lieu
+# d'appartenir à root.
+RUN groupadd -g ${GID} dev \
+    && useradd -m -u ${UID} -g ${GID} -s /bin/bash dev
+
+# Le groupe dialout donne accès aux ports série (/dev/ttyUSB0, /dev/ttyACM0),
+# donc au contrôleur de vol branché en USB.
+RUN usermod -aG dialout dev
+
+# À partir d'ici, tout roule en tant que dev plutôt qu'en root : les RUN suivants
+# comme le conteneur lui-même.
+USER dev
