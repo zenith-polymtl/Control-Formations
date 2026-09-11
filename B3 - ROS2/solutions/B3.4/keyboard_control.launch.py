@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Solution B3.3 : téléop + contrôle clavier, d'une commande. Drone déjà en vol
+Solution B3.4 : téléop + contrôle clavier, d'une commande. Drone déjà en vol
 (décollage à la main, section 4.1).
 
 À copier dans example_ws/src/b3_bringup/launch/, puis colcon build.

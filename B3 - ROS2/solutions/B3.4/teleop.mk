@@ -1,4 +1,4 @@
-# Solution B3.3 : cible teleop. À coller dans le Makefile de B3, dans la section
+# Solution B3.4 : cible teleop. À coller dans le Makefile de B3, dans la section
 # « Cibles de travail », et à ajouter à la ligne .PHONY. (Attention : les
 # commandes commencent par une tabulation, pas des espaces.)
 #

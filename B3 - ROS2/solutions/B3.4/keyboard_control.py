@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Solution B3.3 : contrôle du drone au clavier.
+Solution B3.4 : contrôle du drone au clavier.
 
 Reçoit la touche publiée par la téléop (2 Hz) et la traduit en consigne de
 vitesse pour mavros, sur /mavros/setpoint_raw/local (message MAVLink 84,

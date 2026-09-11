@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Solution du bonus B3.3 : contrôle au clavier avec détection de perte de communication.
+Solution du bonus B3.4 : contrôle au clavier avec détection de perte de communication.
 
 Différence avec keyboard_control.py : la callback ne commande plus le drone, elle
 mémorise la commande et l'heure du message. Un timer plus rapide que le signal
