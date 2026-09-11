@@ -10,8 +10,8 @@ perdu et le drone s'arrête sur place.
 
 Pour tester : ros2 param set /teleop simulate_dropout true
 
-À copier dans example_ws/src/b3_py/b3_py/, avec dans setup.py :
-    'py_keyboard_control_safe = b3_py.keyboard_control_safe:main'
+À copier dans example_ws/src/b3_python_nodes/b3_python_nodes/, avec dans setup.py :
+    'py_keyboard_control_safe = b3_python_nodes.keyboard_control_safe:main'
 """
 
 import rclpy

@@ -24,11 +24,12 @@ FCU_URL      := tcp://$(FCU_HOST):$(TCP_PORT)
 COMPOSE      := docker compose -f $(COMPOSE_FILE)
 
 # Rend ros2 utilisable : docker exec ne passe pas par l'entrypoint de l'image ROS,
-# donc rien n'est sourcé automatiquement. Ajout B3 : si le workspace a déjà été
-# bâti avec colcon, ses packages sont sourcés aussi. Le vrai dépôt fait pareil
-# (source install/setup.bash dans sa cible shell).
-WS_SETUP  := /example_ws/install/setup.bash
-ROS_SETUP := source /opt/ros/humble/setup.bash; if [ -f $(WS_SETUP) ]; then source $(WS_SETUP); fi
+# donc rien n'est sourcé automatiquement. Ajouts B3, dans l'ordre : le workspace
+# b3_tools_ws (bâti dans l'image), puis example_ws s'il a déjà été bâti avec
+# colcon. Le vrai dépôt fait pareil (source install/setup.bash dans sa cible shell).
+TOOLS_SETUP := /b3_tools_ws/install/setup.bash
+WS_SETUP    := /example_ws/install/setup.bash
+ROS_SETUP   := source /opt/ros/humble/setup.bash; source $(TOOLS_SETUP); if [ -f $(WS_SETUP) ]; then source $(WS_SETUP); fi
 
 # Nettoyage partagé par les cibles interactives.
 CLEANUP := echo ">>> Nettoyage : arrêt du conteneur"; $(COMPOSE) down --remove-orphans

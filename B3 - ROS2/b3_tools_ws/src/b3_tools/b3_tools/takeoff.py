@@ -6,15 +6,20 @@ Version simplifiée de la node init de nav_stack (aeac-2026) :
 
 1. Demande à l'autopilote les messages de position (set_message_interval).
 2. Attend un GPS prêt : une position globale reçue et non nulle.
-3. Attend que le pilote passe le drone en GUIDED (Mission Planner ou
-   ros2 service call /mavros/set_mode). La node ne change jamais le mode
-   elle-même : c'est le pilote qui donne le feu vert.
-4. Arme les moteurs, puis décolle à takeoff_alt.
+3. Passe le drone en GUIDED.
+4. Arme les moteurs, puis décolle à takeoff_alt (10 m par défaut).
 5. Une fois l'altitude atteinte, publie True sur /b3/takeoff/completed et ne
    fait plus rien : le contrôle est libéré pour les autres nodes.
 
-Si le pilote quitte GUIDED en cours de route (LAND, par exemple), la node
-revient à l'attente de GUIDED sans insister.
+Attention : le drone décolle tout seul dès que le GPS est prêt. Ne lancer la
+node que quand on est prêt à voler.
+
+Simplification de simulation seulement : sur un vrai drone, le code ne change
+jamais de mode et n'arme jamais les moteurs. Le pilote est toujours responsable
+de ces changements ; le code attend qu'il les ait faits, puis agit dans ce cadre.
+
+Si le pilote change de mode (LAND, par exemple) ou si le drone désarme pendant
+le décollage, la node abandonne sans insister : le pilote a toujours le dernier mot.
 """
 
 import rclpy
@@ -24,18 +29,21 @@ from rclpy.qos import QoSProfile, QoSDurabilityPolicy, QoSHistoryPolicy, QoSReli
 from std_msgs.msg import Bool, Float64
 from sensor_msgs.msg import NavSatFix
 from mavros_msgs.msg import State
-from mavros_msgs.srv import CommandBool, CommandTOL, MessageInterval
+from mavros_msgs.srv import CommandBool, CommandTOL, MessageInterval, SetMode
 
 # Identifiants des messages MAVLink demandés (https://mavlink.io/en/messages/common.html)
 LOCAL_POSITION_NED = 32    # alimente /mavros/local_position/pose
 GLOBAL_POSITION_INT = 33   # alimente /mavros/global_position/global et rel_alt
 REQUESTED_MESSAGES = (LOCAL_POSITION_NED, GLOBAL_POSITION_INT)
 
+COMPLETED_TOPIC = '/b3/takeoff/completed'
+ALT_TOLERANCE = 0.5        # m : décollage terminé à takeoff_alt - ALT_TOLERANCE
+
 
 class TakeoffState:
     WAIT_MESSAGES = "ATTENTE_MESSAGES"
     WAIT_GPS      = "ATTENTE_GPS"
-    WAIT_GUIDED   = "ATTENTE_GUIDED"
+    SET_GUIDED    = "PASSAGE_GUIDED"
     ARMING        = "ARMEMENT"
     CLIMBING      = "MONTEE"
     DONE          = "TERMINE"
@@ -53,7 +61,7 @@ class Takeoff(Node):
         # La machine à états avance au rythme de ce timer (une tentative par seconde au plus)
         self.timer = self.create_timer(1.0, self.step)
 
-        self.get_logger().info(f"Node takeoff démarrée : décollage à {self.takeoff_alt} m une fois en GUIDED.")
+        self.get_logger().info(f"Node takeoff démarrée : décollage à {self.takeoff_alt} m dès que le GPS est prêt.")
 
     # ------------------------------------------------------------------
     # État
@@ -80,21 +88,18 @@ class Takeoff(Node):
     # Paramètres
     # ------------------------------------------------------------------
     def set_up_parameters(self):
-        self.declare_parameter('takeoff_alt', 5.0)          # m au-dessus du point de départ
-        self.declare_parameter('alt_tolerance', 0.5)        # m : décollage terminé à takeoff_alt - alt_tolerance
+        self.declare_parameter('takeoff_alt', 10.0)         # m au-dessus du point de départ
         self.declare_parameter('msg_interval_rate', 10.0)   # Hz demandés pour les messages de position
-        self.declare_parameter('completed_topic', '/b3/takeoff/completed')
 
         self.takeoff_alt = self.get_parameter('takeoff_alt').value
-        self.alt_tolerance = self.get_parameter('alt_tolerance').value
         self.msg_interval_rate = self.get_parameter('msg_interval_rate').value
-        self.completed_topic = self.get_parameter('completed_topic').value
 
     # ------------------------------------------------------------------
     # Services et topics
     # ------------------------------------------------------------------
     def set_up_services(self):
         self.msg_interval_client = self.create_client(MessageInterval, '/mavros/set_message_interval')
+        self.set_mode_client = self.create_client(SetMode, '/mavros/set_mode')
         self.arming_client = self.create_client(CommandBool, '/mavros/cmd/arming')
         self.takeoff_client = self.create_client(CommandTOL, '/mavros/cmd/takeoff')
 
@@ -122,7 +127,7 @@ class Takeoff(Node):
         self.rel_alt_sub = self.create_subscription(
             Float64, '/mavros/global_position/rel_alt', self.rel_alt_callback, qos_be)
 
-        self.completed_pub = self.create_publisher(Bool, self.completed_topic, latched_qos)
+        self.completed_pub = self.create_publisher(Bool, COMPLETED_TOPIC, latched_qos)
 
     def state_callback(self, msg: State):
         self.mavros_state = msg
@@ -148,35 +153,31 @@ class Takeoff(Node):
             self.request_message_intervals()
 
         elif self._state == TakeoffState.WAIT_GPS:
-            if self.gps_ok:
-                self._transition(TakeoffState.WAIT_GUIDED, "GPS prêt")
-                self.get_logger().info(
-                    "Passer le drone en GUIDED pour décoller (Mission Planner : Actions, Set Mode, Guided).")
-            else:
+            if not self.gps_ok:
                 self.get_logger().info("En attente du GPS...", throttle_duration_sec=5.0)
-
-        elif self._state == TakeoffState.WAIT_GUIDED:
-            if not self.in_guided():
-                return
-            if self.mavros_state.armed and self.rel_alt > 1.0:
+            elif self.mavros_state.armed and self.rel_alt > 1.0:
                 self.finish("drone déjà en vol")
             else:
+                self._transition(TakeoffState.SET_GUIDED, "GPS prêt")
+
+        elif self._state == TakeoffState.SET_GUIDED:
+            if self.in_guided():
                 self._transition(TakeoffState.ARMING, "mode GUIDED")
+            elif not self.call_pending:
+                self.send_set_mode_request()
 
         elif self._state == TakeoffState.ARMING:
             if not self.in_guided():
-                self._transition(TakeoffState.WAIT_GUIDED, "le pilote a quitté GUIDED")
+                self.abort("le pilote a changé de mode")
             elif not self.call_pending:
                 self.send_arm_request()
 
         elif self._state == TakeoffState.CLIMBING:
             if not self.in_guided():
-                self._transition(TakeoffState.WAIT_GUIDED, "le pilote a quitté GUIDED")
+                self.abort("le pilote a changé de mode")
             elif not self.mavros_state.armed:
-                # Montée interrompue (une consigne de mouvement reçue trop tôt,
-                # par exemple) : le drone a désarmé au sol, on recommence.
-                self._transition(TakeoffState.WAIT_GUIDED, "drone désarmé pendant la montée")
-            elif self.rel_alt >= self.takeoff_alt - self.alt_tolerance:
+                self.abort("drone désarmé pendant la montée")
+            elif self.rel_alt >= self.takeoff_alt - ALT_TOLERANCE:
                 self.finish(f"altitude atteinte : {self.rel_alt:.1f} m")
             else:
                 self.get_logger().info(f"Montée : {self.rel_alt:.1f} / {self.takeoff_alt} m",
@@ -186,7 +187,11 @@ class Takeoff(Node):
         self._transition(TakeoffState.DONE, reason)
         self.completed_pub.publish(Bool(data=True))
         self.destroy_timer(self.timer)
-        self.get_logger().info(f"Décollage terminé, contrôle libéré ({self.completed_topic} = True).")
+        self.get_logger().info(f"Décollage terminé, contrôle libéré ({COMPLETED_TOPIC} = True).")
+
+    def abort(self, reason: str):
+        self.get_logger().warn(f"Décollage abandonné : {reason}. Relancer la node pour recommencer.")
+        self.destroy_timer(self.timer)
 
     # ------------------------------------------------------------------
     # Requête des messages de position
@@ -214,13 +219,7 @@ class Takeoff(Node):
 
     def message_interval_callback(self, future, message_id):
         self.requests_pending -= 1
-        try:
-            success = future.result().success
-        except Exception as e:
-            self.get_logger().error(f"Appel de set_message_interval échoué : {e}")
-            success = False
-
-        if success:
+        if future.result().success:
             self.requests_succeeded += 1
             self.get_logger().info(f"Message {message_id} demandé à {self.msg_interval_rate} Hz")
         else:
@@ -231,23 +230,26 @@ class Takeoff(Node):
             self._transition(TakeoffState.WAIT_GPS, "messages de position demandés")
 
     # ------------------------------------------------------------------
-    # Armement et décollage
+    # Mode, armement et décollage
     # ------------------------------------------------------------------
+    def send_set_mode_request(self):
+        self.call_pending = True
+        future = self.set_mode_client.call_async(SetMode.Request(custom_mode='GUIDED'))
+        future.add_done_callback(self.set_mode_callback)
+
+    def set_mode_callback(self, future):
+        # Le mode réel se lit dans /mavros/state : step() le vérifie au prochain tic
+        self.call_pending = False
+        if not future.result().mode_sent:
+            self.get_logger().warn("Passage en GUIDED refusé, nouvel essai.", throttle_duration_sec=5.0)
+
     def send_arm_request(self):
-        if not self.arming_client.service_is_ready():
-            return
         self.call_pending = True
         future = self.arming_client.call_async(CommandBool.Request(value=True))
         future.add_done_callback(self.arm_callback)
 
     def arm_callback(self, future):
-        try:
-            response = future.result()
-        except Exception as e:
-            self.get_logger().error(f"Appel d'armement échoué : {e}")
-            self.call_pending = False
-            return
-
+        response = future.result()
         if not response.success:
             # Refus typique : vérifications pré-armement (PreArm) pas encore passées.
             # Le message exact s'affiche dans Mission Planner.
@@ -257,15 +259,7 @@ class Takeoff(Node):
             self.call_pending = False
             return
 
-        if self._state != TakeoffState.ARMING:
-            # Le pilote a quitté GUIDED pendant l'appel : pas de décollage
-            self.call_pending = False
-            return
-
         self.get_logger().info("Moteurs armés, envoi du décollage.")
-        self.send_takeoff_request()
-
-    def send_takeoff_request(self):
         request = CommandTOL.Request()
         request.altitude = float(self.takeoff_alt)
         request.latitude = self.latitude
@@ -275,16 +269,11 @@ class Takeoff(Node):
 
     def takeoff_callback(self, future):
         self.call_pending = False
-        try:
-            response = future.result()
-        except Exception as e:
-            self.get_logger().error(f"Appel de décollage échoué : {e}")
-            return
-
+        response = future.result()
         if not response.success:
             # On reste en ARMEMENT : le prochain tic réarme et renvoie le décollage.
-            self.get_logger().error(f"Décollage refusé (result={response.result}). Nouvel essai.",
-                                    throttle_duration_sec=5.0)
+            self.get_logger().warn(f"Décollage refusé (result={response.result}), nouvel essai.",
+                                   throttle_duration_sec=5.0)
         elif self._state == TakeoffState.ARMING:
             self._transition(TakeoffState.CLIMBING, "décollage accepté")
 

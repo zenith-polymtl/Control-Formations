@@ -19,8 +19,9 @@ pour le bonus de B3.3 (perte de communication). Il est relu à chaque période,
 donc il se change pendant que la node roule :
     ros2 param set /teleop simulate_dropout true
 
-Doit rouler dans un terminal interactif (ros2 run b3_tools teleop), jamais dans
-un fichier launch : ros2 launch ne donne pas le clavier aux nodes qu'il démarre.
+Le clavier est lu dans le terminal où la node a été lancée (/dev/tty), avec
+ros2 run comme avec ros2 launch. L'entrée standard ne suffirait pas : ros2 launch
+la remplace par un tube pour les nodes qu'il démarre.
 """
 
 import os
@@ -65,7 +66,7 @@ class Teleop(Node):
         if not self.takeoff_done:
             self.get_logger().info(
                 f"En attente de la fin du décollage ({self.takeoff_topic}). "
-                "Passer le drone en GUIDED dans Mission Planner pour lancer la node takeoff. "
+                "La node takeoff doit rouler : elle décolle dès que le GPS est prêt. "
                 "Pour publier tout de suite : --ros-args -p wait_takeoff:=false")
 
     # ------------------------------------------------------------------
@@ -125,8 +126,7 @@ class Teleop(Node):
     # ------------------------------------------------------------------
     # Clavier (thread séparé : la lecture ne doit pas bloquer rclpy.spin)
     # ------------------------------------------------------------------
-    def read_keys(self):
-        fd = sys.stdin.fileno()
+    def read_keys(self, fd):
         while rclpy.ok():
             ready, _, _ = select.select([fd], [], [], 0.1)
             if not ready:
@@ -186,27 +186,31 @@ class Teleop(Node):
 
 
 def main(args=None):
-    if not sys.stdin.isatty():
-        print("La téléop doit rouler dans un terminal interactif : ros2 run b3_tools teleop "
-              "(pas dans un fichier launch).", file=sys.stderr)
+    # Le terminal où la node a été lancée, qu'on passe par ros2 run ou ros2 launch
+    try:
+        tty_fd = os.open('/dev/tty', os.O_RDONLY)
+    except OSError:
+        print("Aucun terminal : lancer la téléop depuis un terminal (ros2 run ou ros2 launch).",
+              file=sys.stderr)
         sys.exit(1)
 
     rclpy.init(args=args)
     node = Teleop()
-    print(HELP)
+    print(HELP, flush=True)
 
     # Mode cbreak : chaque touche arrive tout de suite, sans attendre Entrée et
     # sans s'afficher. Ctrl+C fonctionne toujours.
-    settings = termios.tcgetattr(sys.stdin)
-    tty.setcbreak(sys.stdin.fileno())
-    threading.Thread(target=node.read_keys, daemon=True).start()
+    settings = termios.tcgetattr(tty_fd)
+    tty.setcbreak(tty_fd)
+    threading.Thread(target=node.read_keys, args=(tty_fd,), daemon=True).start()
 
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
         pass
     finally:
-        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
+        termios.tcsetattr(tty_fd, termios.TCSADRAIN, settings)
+        os.close(tty_fd)
         node.destroy_node()
         if rclpy.ok():
             rclpy.shutdown()
