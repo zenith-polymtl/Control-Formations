@@ -22,13 +22,12 @@ RUN apt-get update && apt-get install -y \
 #Script qui installe les datasets (dépendances) pour mavros
 RUN /opt/ros/${ROS_DISTRO}/lib/mavros/install_geographiclib_datasets.sh
 
-#Ajouts B3 : nodes de démonstration talker/listener (C++ et Python) et rqt_graph.
-#L'image ros-base ne les contient pas, contrairement à une installation "desktop".
+#Ajout B3 : nodes de démonstration talker/listener (C++ et Python). L'image
+#ros-base ne les contient pas, contrairement à une installation "desktop".
 #Placés après mavros pour que le cache de B2 soit réutilisé autant que possible.
 RUN apt-get update && apt-get install -y \
     ros-${ROS_DISTRO}-demo-nodes-cpp \
     ros-${ROS_DISTRO}-demo-nodes-py \
-    ros-${ROS_DISTRO}-rqt-graph \
     && rm -rf /var/lib/apt/lists/*
 
 #librairies python

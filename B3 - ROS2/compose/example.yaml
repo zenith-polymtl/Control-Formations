@@ -49,11 +49,6 @@ services:
       # deux sens et survivent à la suppression du conteneur.
       - ../example_ws:/example_ws
 
-      # Socket X11 de WSLg : permet aux fenêtres graphiques lancées dans le
-      # conteneur (rqt_graph) de s'afficher sous Windows. Même montage que
-      # compose/dev.yml d'aeac-2026, qui s'en sert pour RViz.
-      - /tmp/.X11-unix:/tmp/.X11-unix:rw
-
     # Dossier au démarrage du conteneur. Les chemins relatifs dans le CMD ou les scripts sont relatifs à ce dossier.
     working_dir: /example_ws
 
@@ -61,17 +56,11 @@ services:
     # pour qu'on puisse entrer dedans quand on veut avec docker exec.
     command: ["bash", "-lc", "while :; do sleep 86400; done"]
 
+    # Réseautique et DDS : important, mais couvert dans une autre formation.
     environment:
-      # Réseautique et DDS : important, mais couvert dans une autre formation.
       - ROS_DOMAIN_ID=2
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
       - ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
-      # Écran sur lequel s'affichent les fenêtres graphiques. Compose reprend la
-      # valeur du terminal WSL qui lance la commande, et :0 (celui de WSLg) si
-      # elle n'est pas définie.
-      - DISPLAY=${DISPLAY:-:0}
-      # Évite un bogue d'affichage courant des applications Qt (rqt) en conteneur.
-      - QT_X11_NO_MITSHM=1
 
   # mavros, seul dans son conteneur, comme en B2 et comme compose/mavros.yml
   # d'aeac-2026. Ne sert qu'à partir de B3.3 : make mavros.
